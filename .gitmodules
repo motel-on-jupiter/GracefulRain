@@ -1,0 +1,3 @@
+[submodule "src/mojgame"]
+	path = src/mojgame
+	url = https://github.com/motel-on-jupiter/moj-game-lib.git
