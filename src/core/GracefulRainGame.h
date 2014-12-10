@@ -10,52 +10,96 @@
 #include "mojgame/auxiliary/sdl_aux.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/includer/sdl_include.h"
+#include "mojgame/scene/Scene.h"
+#include "mojgame/scene/SceneRenderer.h"
+#include "mojgame/scene/SceneSuite.h"
 
-class GracefulRainBaseGameScene :
+class GracefulRainBaseScene : public mojgame::BaseScene,
     public mojgame::sdl_aux::KeyboardEventListenerInterface,
-    public mojgame::sdl_aux::MouseEventListenerInterface {
+    public mojgame::sdl_aux::MouseEventListenerInterface,
+    public mojgame::NonCopyable<GracefulRainBaseScene> {
  public:
-  GracefulRainBaseGameScene(const char *name)
-      : name_(name) {
+  GracefulRainBaseScene(const char *name, TwBar &tweak_bar)
+      : mojgame::BaseScene(name),
+        tweak_bar_(tweak_bar) {
   }
-  virtual ~GracefulRainBaseGameScene() {
+  virtual ~GracefulRainBaseScene() {
   }
 
-  virtual int Initialize(const glm::vec2 &window_size, TwBar &tweak_bar) = 0;
-  virtual void Finalize(TwBar &tweak_bar) = 0;
-  virtual void Update(float elapsed_time, const glm::vec2 &window_size) = 0;
-  virtual void Draw(const glm::vec2 &window_size) = 0;
-  virtual void React(const SDL_KeyboardEvent &keyboard) {
+  bool React(const SDL_KeyboardEvent &keyboard) {
+    return OnReaction(keyboard);
+  }
+  bool React(const SDL_MouseMotionEvent &motion, const glm::vec2 &window_size) {
+    return OnReaction(motion, window_size);
+  }
+  bool React(const SDL_MouseButtonEvent &button, const glm::vec2 &window_size) {
+    return OnReaction(button, window_size);
+  }
+  bool React(const SDL_MouseWheelEvent &wheel, const glm::vec2 &window_size) {
+    return OnReaction(wheel, window_size);
+  }
+
+ protected:
+  virtual bool OnReaction(const SDL_KeyboardEvent &keyboard) {
     UNUSED(keyboard);
+
+    return true;
   }
-  virtual void React(const SDL_MouseMotionEvent &motion) {
+  virtual bool OnReaction(const SDL_MouseMotionEvent &motion,
+                          const glm::vec2 &window_size) {
     UNUSED(motion);
+    UNUSED(window_size);
+
+    return true;
   }
-  virtual void React(const SDL_MouseButtonEvent &button) {
+  virtual bool OnReaction(const SDL_MouseButtonEvent &button,
+                          const glm::vec2 &window_size) {
     UNUSED(button);
+    UNUSED(window_size);
+
+    return true;
   }
-  virtual void React(const SDL_MouseWheelEvent &wheel) {
+  virtual bool OnReaction(const SDL_MouseWheelEvent &wheel,
+                          const glm::vec2 &window_size) {
     UNUSED(wheel);
+    UNUSED(window_size);
+
+    return true;
   }
 
-  const std::string &name() const {
-    return name_;
+  TwBar &tweak_bar() {
+    return tweak_bar_;
   }
 
  private:
-  std::string name_;
+  TwBar &tweak_bar_;
 };
 
-class GracefulRainGame {
+class GracefulRainSceneSuite : public mojgame::BaseSceneSuite {
  public:
-  GracefulRainGame();
+  GracefulRainSceneSuite(GracefulRainBaseScene &scene,
+                         mojgame::BaseSceneRenderer &renderer)
+      : mojgame::BaseSceneSuite(*static_cast<mojgame::BaseScene *>(&scene),
+                                renderer) {
+  }
+  ~GracefulRainSceneSuite() {
+  }
+
+  GracefulRainBaseScene &GetScene() {
+    return reinterpret_cast<GracefulRainBaseScene &>(scene());
+  }
+};
+
+class GracefulRainGame : public mojgame::NonCopyable<GracefulRainGame> {
+ public:
+  GracefulRainGame(TwBar &tweak_bar);
   ~GracefulRainGame();
 
-  int Initialize();
-  void Finalize(TwBar &tweak_bar);
-  void Update(float elapsed_time, const glm::vec2 &window_size);
-  void Draw(const glm::vec2 &window_size);
-  bool React(const SDL_KeyboardEvent &keyboard, const glm::vec2 &window_size, TwBar &tweak_bar);
+  void Initialize();
+  void Finalize();
+  bool Step(float elapsed_time);
+  bool Render(const glm::vec2 &window_size);
+  bool React(const SDL_KeyboardEvent &keyboard, const glm::vec2 &window_size);
   bool React(const SDL_MouseMotionEvent &motion, const glm::vec2 &window_size);
   bool React(const SDL_MouseButtonEvent &button, const glm::vec2 &window_size);
   bool React(const SDL_MouseWheelEvent &wheel, const glm::vec2 &window_size);
@@ -65,10 +109,11 @@ class GracefulRainGame {
   }
 
  private:
-  std::vector<GracefulRainBaseGameScene *> scenes_;
-  GracefulRainBaseGameScene *current_scene_;
-  unsigned int cursor_;
+  std::vector<GracefulRainSceneSuite *> scene_suites_;
+  TwBar &tweak_bar_;
   bool ongoing_;
+  int current_;
+  unsigned int cursor_;
 };
 
 #endif /* CORE_GRACEFULRAINGAME_H_ */

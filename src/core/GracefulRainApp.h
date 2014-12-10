@@ -30,7 +30,7 @@ class GracefulRainApp {
   SDL_Window *window_;
   SDL_GLContext context_;
   TwBar *tweak_bar_;
-  GracefulRainGame game_;
+  GracefulRainGame *game_;
   mojgame::FPSCounter fps_counter_;
 };
 

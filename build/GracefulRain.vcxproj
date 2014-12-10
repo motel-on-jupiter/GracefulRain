@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\core\scene\RippleShaderTestScene.cc" />
     <ClCompile Include="..\src\main.cc" />
     <ClCompile Include="..\src\mojgame\animation\Animation.cc" />
     <ClCompile Include="..\src\mojgame\animation\AnimationDrawer.cc" />
@@ -64,9 +65,11 @@
     <ClCompile Include="..\src\mojgame\misc\FPSCounter.cc" />
     <ClCompile Include="..\src\mojgame\sampler\color_sample.cc" />
     <ClCompile Include="..\src\mojgame\sampler\physics_constant.cc" />
-    <ClCompile Include="..\src\mojgame\scene\BaseScene.cc" />
     <ClCompile Include="..\src\mojgame\scene\GraphDrivenScene.cc" />
+    <ClCompile Include="..\src\mojgame\scene\Scene.cc" />
     <ClCompile Include="..\src\mojgame\scene\SceneGraph.cc" />
+    <ClCompile Include="..\src\mojgame\scene\SceneRenderer.cc" />
+    <ClCompile Include="..\src\mojgame\scene\SceneSuite.cc" />
     <ClCompile Include="..\src\pch\precompile.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -76,6 +79,7 @@
     <ClCompile Include="..\src\core\GracefulRainTweakerContext.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\core\scene\RippleShaderTestScene.h" />
     <ClInclude Include="..\src\mojgame\animation\Animation.h" />
     <ClInclude Include="..\src\mojgame\animation\AnimationDrawer.h" />
     <ClInclude Include="..\src\mojgame\animation\AnimationPlayer.h" />
@@ -125,9 +129,11 @@
     <ClInclude Include="..\src\mojgame\misc\FPSCounter.h" />
     <ClInclude Include="..\src\mojgame\sampler\color_sample.h" />
     <ClInclude Include="..\src\mojgame\sampler\physics_constant.h" />
-    <ClInclude Include="..\src\mojgame\scene\BaseScene.h" />
     <ClInclude Include="..\src\mojgame\scene\GraphDrivenScene.h" />
+    <ClInclude Include="..\src\mojgame\scene\Scene.h" />
     <ClInclude Include="..\src\mojgame\scene\SceneGraph.h" />
+    <ClInclude Include="..\src\mojgame\scene\SceneRenderer.h" />
+    <ClInclude Include="..\src\mojgame\scene\SceneSuite.h" />
     <ClInclude Include="..\src\pch\precompile.h" />
     <ClInclude Include="..\src\core\GracefulRainApp.h" />
     <ClInclude Include="..\src\core\GracefulRainGame.h" />

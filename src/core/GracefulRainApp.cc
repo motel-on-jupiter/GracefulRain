@@ -29,7 +29,7 @@ GracefulRainApp::GracefulRainApp()
     : window_(nullptr),
       context_(nullptr),
       tweak_bar_(nullptr),
-      game_(),
+      game_(nullptr),
       fps_counter_(kFPSCountSamplingTime) {
 }
 
@@ -106,17 +106,23 @@ int GracefulRainApp::Run() {
     return -1;
   }
   tweak_bar_ = TwNewBar("TweakMenu");
+  if (tweak_bar_ == nullptr) {
+    mojgame::LOGGER().Error( "Failed to create tweak bar (errmsg: %s)", TwGetLastError());
+    CleanUp();
+    return -1;
+  }
   mojgame::atb_aux::DefineMenu(kTweakBarPosition, kTweakBarWidth, kTweakBarHeight, kTweakBarColor);
   mojgame::atb_aux::AddInt32VarRO(*tweak_bar_, "System", "Actual Frame Rate", tweaker_ctx.system_actual_fps);
   mojgame::atb_aux::AddFloatVarRW(*tweak_bar_, "System", "Time Speed", tweaker_ctx.system_time_speed, "min='0' max='30' step='0.5'");
 
   // Initialize the game
-  int ret = game_.Initialize();
-  if (ret < 0) {
-    mojgame::LOGGER().Error("Failed to initialize the game objects (ret: %d)");
+  game_ = new GracefulRainGame(*tweak_bar_);
+  if (game_ == nullptr) {
+    mojgame::LOGGER().Error( "Failed to create game object)");
     CleanUp();
     return -1;
   }
+  game_->Initialize();
 
   // Set the minimum timer resolution
   timeBeginPeriod(1);
@@ -139,33 +145,39 @@ int GracefulRainApp::Run() {
           break;
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-          game_.React(event.key, kWindowSize, *tweak_bar_);
+          game_->React(event.key, kWindowSize);
           break;
         case SDL_MOUSEMOTION:
-          game_.React(event.motion, kWindowSize);
+          game_->React(event.motion, kWindowSize);
           break;
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
-          game_.React(event.button, kWindowSize);
+          game_->React(event.button, kWindowSize);
           break;
         case SDL_MOUSEWHEEL:
-          game_.React(event.wheel, kWindowSize);
+          game_->React(event.wheel, kWindowSize);
           break;
       }
     }
-    if (escape_loop || !game_.ongoing()) {
+    if (escape_loop || !game_->ongoing()) {
       break;
     }
 
     // Update the game
-    game_.Update(kGameLoopIntervalSec * tweaker_ctx.system_time_speed,
-                 kWindowSize);
+    if (!game_->Step(kGameLoopIntervalSec * tweaker_ctx.system_time_speed)) {
+      mojgame::LOGGER().Error("Failed to step the game");
+      loop_stat = -1;
+      break;
+    }
 
-    // Draw the objects
-    game_.Draw(kWindowSize);
+    // Render the objects
+    if (!game_->Render(kWindowSize)) {
+      mojgame::LOGGER().Error("Failed to render the game");
+      loop_stat = -1;
+      break;
+    }
     if (TwDraw() == 0) {
-      mojgame::LOGGER().Error("Failed to draw the tweaker (errmsg: %s)",
-                              TwGetLastError());
+      mojgame::LOGGER().Error("Failed to render the tweak bar");
       loop_stat = -1;
       break;
     }
@@ -189,11 +201,23 @@ int GracefulRainApp::Run() {
 void GracefulRainApp::CleanUp() {
   mojgame::LOGGER().Info("Clean up the application");
 
-  game_.Finalize(*tweak_bar_);
-  if (TwRemoveAllVars(tweak_bar_) == 0) {
-    mojgame::LOGGER().Warn(
-        "Failed to remove all tweaker varibables (errmsg: %s)",
-        TwGetLastError());
+  if (game_ != nullptr) {
+    game_->Finalize();
+    delete game_;
+    game_ = nullptr;
+  }
+  if (tweak_bar_ != nullptr) {
+    if (TwRemoveAllVars(tweak_bar_) == 0) {
+      mojgame::LOGGER().Warn(
+          "Failed to remove variables from tweak bar (errmsg: %s)",
+          TwGetLastError());
+    }
+    if (TwDeleteBar(tweak_bar_) == 0) {
+      mojgame::LOGGER().Warn(
+          "Failed to delete tweak bar (errmsg: %s)",
+          TwGetLastError());
+    }
+    tweak_bar_ = nullptr;
   }
   if (TwTerminate() == 0) {
     // Ignore the error to terminate the tweaker

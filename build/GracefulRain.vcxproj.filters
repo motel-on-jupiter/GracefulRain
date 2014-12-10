@@ -90,9 +90,6 @@
     <ClCompile Include="..\src\core\GracefulRainApp.cc">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\mojgame\scene\BaseScene.cc">
-      <Filter>src\mojgame\scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\mojgame\scene\GraphDrivenScene.cc">
       <Filter>src\mojgame\scene</Filter>
     </ClCompile>
@@ -219,6 +216,18 @@
     <ClCompile Include="..\src\mojgame\animation\AnimationResource.cc">
       <Filter>src\mojgame\animation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mojgame\scene\SceneSuite.cc">
+      <Filter>src\mojgame\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mojgame\scene\Scene.cc">
+      <Filter>src\mojgame\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mojgame\scene\SceneRenderer.cc">
+      <Filter>src\mojgame\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\RippleShaderTestScene.cc">
+      <Filter>src\core\scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\pch\precompile.h">
@@ -232,9 +241,6 @@
     </ClInclude>
     <ClInclude Include="..\src\core\GracefulRainApp.h">
       <Filter>src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mojgame\scene\BaseScene.h">
-      <Filter>src\mojgame\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mojgame\scene\GraphDrivenScene.h">
       <Filter>src\mojgame\scene</Filter>
@@ -388,6 +394,18 @@
     </ClInclude>
     <ClInclude Include="..\src\mojgame\animation\AnimationResource.h">
       <Filter>src\mojgame\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\scene\SceneSuite.h">
+      <Filter>src\mojgame\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\scene\Scene.h">
+      <Filter>src\mojgame\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\scene\SceneRenderer.h">
+      <Filter>src\mojgame\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\RippleShaderTestScene.h">
+      <Filter>src\core\scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
