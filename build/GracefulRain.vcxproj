@@ -42,6 +42,7 @@
     <ClCompile Include="..\src\mojgame\catalogue\log_emitter\FileLogEmitter.cc" />
     <ClCompile Include="..\src\mojgame\catalogue\log_emitter\MessageBoxLogEmitter.cc" />
     <ClCompile Include="..\src\mojgame\catalogue\log_emitter\PipeLogEmitter.cc" />
+    <ClCompile Include="..\src\mojgame\catalogue\renderer\gl\GradationalGLRenderer.cc" />
     <ClCompile Include="..\src\mojgame\catalogue\scene\TitleScene.cc" />
     <ClCompile Include="..\src\mojgame\entity\CubicEntity.cc" />
     <ClCompile Include="..\src\mojgame\entity\PlanarEntity.cc" />
@@ -109,6 +110,7 @@
     <ClInclude Include="..\src\mojgame\catalogue\log_emitter\FileLogEmitter.h" />
     <ClInclude Include="..\src\mojgame\catalogue\log_emitter\MessageBoxLogEmitter.h" />
     <ClInclude Include="..\src\mojgame\catalogue\log_emitter\PipeLogEmitter.h" />
+    <ClInclude Include="..\src\mojgame\catalogue\renderer\gl\GradationalGLRenderer.h" />
     <ClInclude Include="..\src\mojgame\catalogue\scene\TitleScene.h" />
     <ClInclude Include="..\src\mojgame\entity\CubicEntity.h" />
     <ClInclude Include="..\src\mojgame\entity\PlanarEntity.h" />

@@ -146,8 +146,6 @@ bool GracefulRainGame::React(const SDL_MouseMotionEvent &motion,
 
 bool GracefulRainGame::React(const SDL_MouseButtonEvent &button,
                              const glm::vec2 &window_size) {
-  UNUSED(window_size);
-
   if (ongoing_ && current_ != -1) {
     return scene_suites_[current_]->GetScene().React(button, window_size);
   }
@@ -156,8 +154,6 @@ bool GracefulRainGame::React(const SDL_MouseButtonEvent &button,
 
 bool GracefulRainGame::React(const SDL_MouseWheelEvent &wheel,
                              const glm::vec2 &window_size) {
-  UNUSED(window_size);
-
   if (ongoing_ && current_ != -1) {
     return scene_suites_[current_]->GetScene().React(wheel, window_size);
   }

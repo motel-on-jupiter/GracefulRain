@@ -5,6 +5,7 @@
 #define CORE_SCENE_RIPPLESHADERTESTSCENE_H_
 
 #include "core/GracefulRainGame.h"
+#include "mojgame/catalogue/renderer/gl/GradationalGLRenderer.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/scene/Scene.h"
 
@@ -47,16 +48,7 @@ class RippleShaderTestSceneGLRenderer : public mojgame::BaseSceneRenderer {
   virtual bool OnRendering(const glm::vec2 &window_size);
 
  private:
-  void RenderOnStep1(const glm::vec2 &window_size);
-  void RenderOnStep2();
-
-  mojgame::gl_shader::program_t rain_shader_program_;
-  mojgame::gl_shader::program_t blit_shader_program_;
-  mojgame::GLFrameBuffer framebuf_;
-  GLuint vertex_array_;
-  GLuint vertex_buffer_;
-  GLuint uv_buffer_;
-  int current_texture_;
+  mojgame::GradationalGLRenderer gradational_renderer_;
   glm::vec2 drop_pos_;
 };
 
