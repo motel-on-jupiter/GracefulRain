@@ -5,22 +5,23 @@
 #define CORE_GRACEFULRAINGAME_H_
 
 #include <string>
+#include <utility>
 #include <vector>
 #include "mojgame/auxiliary/csyntax_aux.h"
 #include "mojgame/auxiliary/sdl_aux.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/includer/sdl_include.h"
 #include "mojgame/scene/Scene.h"
-#include "mojgame/scene/SceneRenderer.h"
-#include "mojgame/scene/SceneSuite.h"
 
-class GracefulRainBaseScene : public mojgame::BaseScene,
+class GracefulRainBaseScene :
+    public mojgame::RendererAttachableScene,
     public mojgame::sdl_aux::KeyboardEventListenerInterface,
     public mojgame::sdl_aux::MouseEventListenerInterface,
     public mojgame::NonCopyable<GracefulRainBaseScene> {
  public:
-  GracefulRainBaseScene(const char *name, TwBar &tweak_bar)
-      : mojgame::BaseScene(name),
+  GracefulRainBaseScene(const char *name, mojgame::BaseRenderer *renderer,
+                        TwBar &tweak_bar)
+      : mojgame::RendererAttachableScene(name, renderer),
         tweak_bar_(tweak_bar) {
   }
   virtual ~GracefulRainBaseScene() {
@@ -75,27 +76,12 @@ class GracefulRainBaseScene : public mojgame::BaseScene,
   TwBar &tweak_bar_;
 };
 
-class GracefulRainSceneSuite : public mojgame::BaseSceneSuite {
- public:
-  GracefulRainSceneSuite(GracefulRainBaseScene &scene,
-                         mojgame::BaseSceneRenderer &renderer)
-      : mojgame::BaseSceneSuite(*static_cast<mojgame::BaseScene *>(&scene),
-                                renderer) {
-  }
-  ~GracefulRainSceneSuite() {
-  }
-
-  GracefulRainBaseScene &GetScene() {
-    return reinterpret_cast<GracefulRainBaseScene &>(scene());
-  }
-};
-
 class GracefulRainGame : public mojgame::NonCopyable<GracefulRainGame> {
  public:
   GracefulRainGame(TwBar &tweak_bar);
   ~GracefulRainGame();
 
-  void Initialize();
+  bool Initialize();
   void Finalize();
   bool Step(float elapsed_time);
   bool Render(const glm::vec2 &window_size);
@@ -109,7 +95,7 @@ class GracefulRainGame : public mojgame::NonCopyable<GracefulRainGame> {
   }
 
  private:
-  std::vector<GracefulRainSceneSuite *> scene_suites_;
+  std::vector<GracefulRainBaseScene *> scenes_;
   TwBar &tweak_bar_;
   bool ongoing_;
   int current_;

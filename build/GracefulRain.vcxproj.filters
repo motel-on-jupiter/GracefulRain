@@ -64,20 +64,11 @@
     <Filter Include="src\core\scene">
       <UniqueIdentifier>{78000e05-8574-4407-877b-9da7791deb88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\core\actor">
-      <UniqueIdentifier>{25c2ed2e-f553-4840-9241-e81ad1a138e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\core\animation">
-      <UniqueIdentifier>{84b76f0a-0c30-4707-ab80-6d60daf68586}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\mojgame\animation">
       <UniqueIdentifier>{b2e0df07-1b61-4e2a-b589-270504d1c7df}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\mojgame\catalogue\renderer">
       <UniqueIdentifier>{9f3b82ba-b47e-4eaf-a2d5-eadc10038dce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\mojgame\catalogue\renderer\gl">
-      <UniqueIdentifier>{9553b498-3ac0-4069-997a-c20f719a7969}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -222,20 +213,17 @@
     <ClCompile Include="..\src\mojgame\animation\AnimationResource.cc">
       <Filter>src\mojgame\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\mojgame\scene\SceneSuite.cc">
-      <Filter>src\mojgame\scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\mojgame\scene\Scene.cc">
       <Filter>src\mojgame\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\mojgame\scene\SceneRenderer.cc">
-      <Filter>src\mojgame\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\core\scene\RippleShaderTestScene.cc">
+    <ClCompile Include="..\src\core\scene\RippleTestScene.cc">
       <Filter>src\core\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\mojgame\catalogue\renderer\gl\GradationalGLRenderer.cc">
-      <Filter>src\mojgame\catalogue\renderer\gl</Filter>
+    <ClCompile Include="..\src\mojgame\catalogue\renderer\GradationalRenderer.cc">
+      <Filter>src\mojgame\catalogue\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mojgame\catalogue\renderer\RippleRenderer.cc">
+      <Filter>src\mojgame\catalogue\renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,20 +392,17 @@
     <ClInclude Include="..\src\mojgame\animation\AnimationResource.h">
       <Filter>src\mojgame\animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\mojgame\scene\SceneSuite.h">
-      <Filter>src\mojgame\scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\mojgame\scene\Scene.h">
       <Filter>src\mojgame\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\mojgame\scene\SceneRenderer.h">
-      <Filter>src\mojgame\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\core\scene\RippleShaderTestScene.h">
+    <ClInclude Include="..\src\core\scene\RippleTestScene.h">
       <Filter>src\core\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\mojgame\catalogue\renderer\gl\GradationalGLRenderer.h">
-      <Filter>src\mojgame\catalogue\renderer\gl</Filter>
+    <ClInclude Include="..\src\mojgame\catalogue\renderer\GradationalRenderer.h">
+      <Filter>src\mojgame\catalogue\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\catalogue\renderer\RippleRenderer.h">
+      <Filter>src\mojgame\catalogue\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

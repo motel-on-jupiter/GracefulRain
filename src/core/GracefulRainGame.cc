@@ -2,7 +2,7 @@
  * Copyright (C) 2014 The Motel on Jupiter
  */
 #include "core/GracefulRainGame.h"
-#include "core/scene/RippleShaderTestScene.h"
+#include "core/scene/RippleTestScene.h"
 #include "mojgame/auxiliary/gl/gl_rendering.h"
 #include "mojgame/auxiliary/atb_aux.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
@@ -12,7 +12,7 @@
 #include "mojgame/scene/Scene.h"
 
 GracefulRainGame::GracefulRainGame(TwBar &tweak_bar)
-    : scene_suites_(),
+    : scenes_(),
       tweak_bar_(tweak_bar),
       ongoing_(false),
       current_(-1),
@@ -22,30 +22,33 @@ GracefulRainGame::GracefulRainGame(TwBar &tweak_bar)
 GracefulRainGame::~GracefulRainGame() {
 }
 
-void GracefulRainGame::Initialize() {
-  RippleShaderTestScene *main_scene = new RippleShaderTestScene(tweak_bar_);
-  mojgame::BaseSceneRenderer *renderer = new RippleShaderTestSceneGLRenderer(*main_scene);
-  GracefulRainSceneSuite *suite = new GracefulRainSceneSuite(*main_scene, *renderer);
-  scene_suites_.push_back(suite);
+bool GracefulRainGame::Initialize() {
+  GracefulRainBaseScene *scene = new RippleTestScene(tweak_bar_);
+  if (scene == nullptr) {
+    mojgame::Logger().Error("Failed to create ripple test scene");
+    return false;
+  }
+  scenes_.push_back(scene);
   ongoing_ = true;
+  current_ = -1;
+  return true;
 }
 
 void GracefulRainGame::Finalize() {
   if (current_ != -1) {
-    scene_suites_[current_]->Finalize();
+    scenes_[current_]->Finalize();
     current_ = -1;
   }
-  for (auto it = scene_suites_.begin(); it != scene_suites_.end(); ++it) {
-    delete &((*it)->scene());
-    delete &((*it)->renderer());
+  for (auto it = scenes_.begin(); it != scenes_.end(); ++it) {
+    delete *it;
   }
-  scene_suites_.clear();
+  scenes_.clear();
   ongoing_ = false;
 }
 
 bool GracefulRainGame::Step(float elapsed_time) {
   if (ongoing_ && current_ != -1) {
-    return scene_suites_[current_]->Step(elapsed_time);
+    return scenes_[current_]->Step(elapsed_time);
   }
   return true;
 }
@@ -65,7 +68,7 @@ bool GracefulRainGame::Render(const glm::vec2 &window_size) {
       glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
       glm::vec2 name_pos = glm::vec2(10.0f, 20.0f);
       unsigned int idx = 0;
-      for (auto it = scene_suites_.begin(); it != scene_suites_.end(); ++it) {
+      for (auto it = scenes_.begin(); it != scenes_.end(); ++it) {
         glRasterPos2fv(glm::value_ptr(name_pos));
         glutBitmapString(
             GLUT_BITMAP_9_BY_15,
@@ -73,12 +76,12 @@ bool GracefulRainGame::Render(const glm::vec2 &window_size) {
                 (idx == cursor_) ? "-> " : "   ")));
         glutBitmapString(
             GLUT_BITMAP_9_BY_15,
-            reinterpret_cast<const unsigned char *>((*it)->scene().name().c_str()));
+            reinterpret_cast<const unsigned char *>((*it)->name().c_str()));
         name_pos += glm::vec2(0.0f, 12);
         ++idx;
       }
     } else {
-      return scene_suites_[current_]->Render(window_size);
+      return scenes_[current_]->Render(window_size);
     }
   }
   return true;
@@ -93,7 +96,7 @@ bool GracefulRainGame::React(const SDL_KeyboardEvent &keyboard, const glm::vec2 
       switch (keyboard.keysym.sym) {
         case SDLK_j:
         case SDLK_DOWN:
-          if (cursor_ < scene_suites_.size() - 1) {
+          if (cursor_ < scenes_.size() - 1) {
             ++cursor_;
           }
           break;
@@ -104,13 +107,13 @@ bool GracefulRainGame::React(const SDL_KeyboardEvent &keyboard, const glm::vec2 
           }
           break;
         case SDLK_RETURN: {
-          if (cursor_ < scene_suites_.size()) {
+          if (cursor_ < scenes_.size()) {
             mojgame::LOGGER().Info("Set up the game scene (scene: %s)",
-                                   scene_suites_[cursor_]->scene().name().c_str());
-            if (!scene_suites_[cursor_]->Initialize(window_size)) {
+                                   scenes_[cursor_]->name().c_str());
+            if (!scenes_[cursor_]->Initialize(window_size)) {
               mojgame::LOGGER().Error(
                   "Failed to setup the scene (scene: %s)",
-                  scene_suites_[cursor_]->scene().name().c_str());
+                  scenes_[cursor_]->name().c_str());
               return false;
             }
             current_ = cursor_;
@@ -126,11 +129,11 @@ bool GracefulRainGame::React(const SDL_KeyboardEvent &keyboard, const glm::vec2 
     if (keyboard.keysym.sym == SDLK_ESCAPE) {
       if (keyboard.state == SDL_PRESSED) {
         mojgame::LOGGER().Info("Clean up the current scene");
-        scene_suites_[current_]->Finalize();
+        scenes_[current_]->Finalize();
         current_ = -1;
       }
     } else {
-      return scene_suites_[current_]->GetScene().React(keyboard);
+      return scenes_[current_]->React(keyboard);
     }
   }
   return true;
@@ -139,7 +142,7 @@ bool GracefulRainGame::React(const SDL_KeyboardEvent &keyboard, const glm::vec2 
 bool GracefulRainGame::React(const SDL_MouseMotionEvent &motion,
                              const glm::vec2 &window_size) {
   if (ongoing_ && current_ != -1) {
-    return scene_suites_[current_]->GetScene().React(motion, window_size);
+    return scenes_[current_]->React(motion, window_size);
   }
   return true;
 }
@@ -147,7 +150,7 @@ bool GracefulRainGame::React(const SDL_MouseMotionEvent &motion,
 bool GracefulRainGame::React(const SDL_MouseButtonEvent &button,
                              const glm::vec2 &window_size) {
   if (ongoing_ && current_ != -1) {
-    return scene_suites_[current_]->GetScene().React(button, window_size);
+    return scenes_[current_]->React(button, window_size);
   }
   return true;
 }
@@ -155,7 +158,7 @@ bool GracefulRainGame::React(const SDL_MouseButtonEvent &button,
 bool GracefulRainGame::React(const SDL_MouseWheelEvent &wheel,
                              const glm::vec2 &window_size) {
   if (ongoing_ && current_ != -1) {
-    return scene_suites_[current_]->GetScene().React(wheel, window_size);
+    return scenes_[current_]->React(wheel, window_size);
   }
   return true;
 }
