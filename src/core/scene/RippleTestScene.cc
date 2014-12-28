@@ -17,12 +17,46 @@ RippleTestSceneRenderer::RippleTestSceneRenderer()
 }
 
 RippleTestScene::RippleTestScene(TwBar &tweak_bar)
-    : GracefulRainBaseScene("Ripple Test", &renderer_, tweak_bar) {
+    : GracefulRainBaseScene("Ripple Test", &renderer_, tweak_bar),
+      renderer_(),
+      rainy_stimulator_(),
+      walker_stimulator_() {
+}
+
+bool RippleTestScene::OnInitial(const glm::vec2 &window_size) {
+  if (!GracefulRainBaseScene::OnInitial(window_size)) {
+    return false;
+  }
+  renderer_.Attach(rainy_stimulator_);
+  walker_stimulator_.Reset(window_size * 0.5f, 0.0f, 8.0f, 2.0f);
+  return true;
 }
 
 bool RippleTestScene::OnStep(float elapsed_time) {
   UNUSED(elapsed_time);
 
+  return true;
+}
+
+bool RippleTestScene::OnReaction(const SDL_KeyboardEvent &keyboard) {
+  if (keyboard.type == SDL_KEYDOWN) {
+    if (keyboard.keysym.sym == SDLK_w) {
+      renderer_.Dettach();
+      renderer_.Attach(walker_stimulator_);
+      walker_stimulator_.set_move_forward(true);
+    }
+    if (keyboard.keysym.sym == SDLK_s) {
+      renderer_.Dettach();
+      renderer_.Attach(walker_stimulator_);
+      walker_stimulator_.set_move_forward(false);
+    }
+    if (keyboard.keysym.sym == SDLK_d) {
+      walker_stimulator_.Rotate(-0.2f);
+    }
+    if (keyboard.keysym.sym == SDLK_a) {
+      walker_stimulator_.Rotate(0.2f);
+    }
+  }
   return true;
 }
 
@@ -34,7 +68,7 @@ bool RippleTestScene::OnReaction(const SDL_MouseButtonEvent &button,
       stimulus.pos = glm::vec2(static_cast<float>(button.x),
                                static_cast<float>(button.y)) / window_size;
       stimulus.pos.y = 1.0f - stimulus.pos.y;
-      stimulus.force = 1.0f;
+      stimulus.effect = 1.0f;
       renderer_.Stimulate(stimulus);
     }
   }
@@ -48,7 +82,7 @@ bool RippleTestScene::OnReaction(const SDL_MouseMotionEvent &motion,
     stimulus.pos = glm::vec2(static_cast<float>(motion.x),
                              static_cast<float>(motion.y)) / window_size;
     stimulus.pos.y = 1.0f - stimulus.pos.y;
-    stimulus.force = 1.0f;
+    stimulus.effect = 1.0f;
     renderer_.Stimulate(stimulus);
   }
   return true;

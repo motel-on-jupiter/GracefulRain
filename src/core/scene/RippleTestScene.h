@@ -23,7 +23,9 @@ class RippleTestScene : public GracefulRainBaseScene {
   }
 
  protected:
+  virtual bool OnInitial(const glm::vec2 &window_size);
   virtual bool OnStep(float elapsed_time);
+  virtual bool OnReaction(const SDL_KeyboardEvent &keyboard);
   virtual bool OnReaction(const SDL_MouseButtonEvent &button,
                           const glm::vec2 &window_size);
   virtual bool OnReaction(const SDL_MouseMotionEvent &motion,
@@ -31,6 +33,8 @@ class RippleTestScene : public GracefulRainBaseScene {
 
  private:
   RippleTestSceneRenderer renderer_;
+  mojgame::RainyRippleStimulator rainy_stimulator_;
+  mojgame::WalkerRippleStimulator walker_stimulator_;
 };
 
 #endif /* CORE_SCENE_RIPPLETESTSCENE_H_ */

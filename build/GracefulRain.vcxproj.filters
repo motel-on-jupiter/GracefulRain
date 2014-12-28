@@ -225,6 +225,9 @@
     <ClCompile Include="..\src\mojgame\catalogue\renderer\RippleRenderer.cc">
       <Filter>src\mojgame\catalogue\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mojgame\misc\RadiconMover.cc">
+      <Filter>src\mojgame\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\pch\precompile.h">
@@ -403,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="..\src\mojgame\catalogue\renderer\RippleRenderer.h">
       <Filter>src\mojgame\catalogue\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\misc\RadiconMover.h">
+      <Filter>src\mojgame\misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

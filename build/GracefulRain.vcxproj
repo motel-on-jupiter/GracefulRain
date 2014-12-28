@@ -65,6 +65,7 @@
     <ClCompile Include="..\src\mojgame\logging\LogEmitter.cc" />
     <ClCompile Include="..\src\mojgame\logging\Logger.cc" />
     <ClCompile Include="..\src\mojgame\misc\FPSCounter.cc" />
+    <ClCompile Include="..\src\mojgame\misc\RadiconMover.cc" />
     <ClCompile Include="..\src\mojgame\sampler\color_sample.cc" />
     <ClCompile Include="..\src\mojgame\sampler\physics_constant.cc" />
     <ClCompile Include="..\src\mojgame\scene\GraphDrivenScene.cc" />
@@ -129,6 +130,7 @@
     <ClInclude Include="..\src\mojgame\logging\LogEmitter.h" />
     <ClInclude Include="..\src\mojgame\logging\Logger.h" />
     <ClInclude Include="..\src\mojgame\misc\FPSCounter.h" />
+    <ClInclude Include="..\src\mojgame\misc\RadiconMover.h" />
     <ClInclude Include="..\src\mojgame\sampler\color_sample.h" />
     <ClInclude Include="..\src\mojgame\sampler\physics_constant.h" />
     <ClInclude Include="..\src\mojgame\scene\GraphDrivenScene.h" />
