@@ -2,6 +2,7 @@
  * Copyright (C) 2014 The Motel on Jupiter
  */
 #include "core/GracefulRainGame.h"
+#include "core/scene/PhantomTestScene.h"
 #include "core/scene/RippleTestScene.h"
 #include "mojgame/auxiliary/gl/gl_rendering.h"
 #include "mojgame/auxiliary/atb_aux.h"
@@ -26,6 +27,12 @@ bool GracefulRainGame::Initialize() {
   GracefulRainBaseScene *scene = new RippleTestScene(tweak_bar_);
   if (scene == nullptr) {
     mojgame::Logger().Error("Failed to create ripple test scene");
+    return false;
+  }
+  scenes_.push_back(scene);
+  scene = new PhantomTestScene(tweak_bar_);
+  if (scene == nullptr) {
+    mojgame::Logger().Error("Failed to create phantom test scene");
     return false;
   }
   scenes_.push_back(scene);

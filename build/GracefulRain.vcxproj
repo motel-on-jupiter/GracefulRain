@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc" />
+    <ClCompile Include="..\src\core\scene\PhantomTestScene.cc" />
     <ClCompile Include="..\src\core\scene\RippleTestScene.cc" />
     <ClCompile Include="..\src\main.cc" />
     <ClCompile Include="..\src\mojgame\animation\Animation.cc" />
@@ -80,6 +82,8 @@
     <ClCompile Include="..\src\core\GracefulRainTweakerContext.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h" />
+    <ClInclude Include="..\src\core\scene\PhantomTestScene.h" />
     <ClInclude Include="..\src\core\scene\RippleTestScene.h" />
     <ClInclude Include="..\src\mojgame\animation\Animation.h" />
     <ClInclude Include="..\src\mojgame\animation\AnimationDrawer.h" />

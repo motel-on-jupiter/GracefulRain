@@ -70,6 +70,9 @@
     <Filter Include="src\mojgame\catalogue\renderer">
       <UniqueIdentifier>{9f3b82ba-b47e-4eaf-a2d5-eadc10038dce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\core\ripple_stimulator">
+      <UniqueIdentifier>{69f54fb5-6394-4139-965a-a93e8fec620d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cc">
@@ -227,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="..\src\mojgame\misc\RadiconMover.cc">
       <Filter>src\mojgame\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc">
+      <Filter>src\core\ripple_stimulator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\PhantomTestScene.cc">
+      <Filter>src\core\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,6 +418,12 @@
     </ClInclude>
     <ClInclude Include="..\src\mojgame\misc\RadiconMover.h">
       <Filter>src\mojgame\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h">
+      <Filter>src\core\ripple_stimulator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\PhantomTestScene.h">
+      <Filter>src\core\scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
