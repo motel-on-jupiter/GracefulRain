@@ -1,9 +1,10 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef CORE_SCENE_PHANTOMTESTSCENE_H_
-#define CORE_SCENE_PHANTOMTESTSCENE_H_
+#ifndef CORE_SCENE_TEST_PHANTOMTESTSCENE_H_
+#define CORE_SCENE_TEST_PHANTOMTESTSCENE_H_
 
+#include <string>
 #include "core/GracefulRainGame.h"
 #include "core/ripple_stimulator/PhantomRippleStimulator.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
@@ -11,6 +12,8 @@
 
 class PhantomTestScene : public GracefulRainBaseScene {
  public:
+  static const std::string kName;
+
   explicit PhantomTestScene(TwBar &tweak_bar);
   virtual ~PhantomTestScene() {
   }
@@ -29,4 +32,4 @@ class PhantomTestScene : public GracefulRainBaseScene {
   PhantomRippleStimulator phantom_stimulator_;
 };
 
-#endif /* CORE_SCENE_PHANTOMTESTSCENE_H_ */
+#endif /* CORE_SCENE_TEST_PHANTOMTESTSCENE_H_ */

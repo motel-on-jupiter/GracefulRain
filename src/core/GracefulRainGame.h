@@ -4,14 +4,13 @@
 #ifndef CORE_GRACEFULRAINGAME_H_
 #define CORE_GRACEFULRAINGAME_H_
 
-#include <string>
-#include <utility>
-#include <vector>
+#include "core/scene/test/TestSceneGraph.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
 #include "mojgame/auxiliary/sdl_aux.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/includer/sdl_include.h"
 #include "mojgame/scene/Scene.h"
+#include "mojgame/scene/SceneGraph.h"
 
 class GracefulRainBaseScene :
     public mojgame::RendererAttachableScene,
@@ -81,11 +80,11 @@ class GracefulRainGame : public mojgame::NonCopyable<GracefulRainGame> {
   GracefulRainGame(TwBar &tweak_bar);
   ~GracefulRainGame();
 
-  bool Initialize();
+  bool Initialize(const glm::vec2 &window_size);
   void Finalize();
-  bool Step(float elapsed_time);
+  bool Step(float elapsed_time, const glm::vec2 &window_size);
   bool Render(const glm::vec2 &window_size);
-  bool React(const SDL_KeyboardEvent &keyboard, const glm::vec2 &window_size);
+  bool React(const SDL_KeyboardEvent &keyboard);
   bool React(const SDL_MouseMotionEvent &motion, const glm::vec2 &window_size);
   bool React(const SDL_MouseButtonEvent &button, const glm::vec2 &window_size);
   bool React(const SDL_MouseWheelEvent &wheel, const glm::vec2 &window_size);
@@ -95,11 +94,10 @@ class GracefulRainGame : public mojgame::NonCopyable<GracefulRainGame> {
   }
 
  private:
-  std::vector<GracefulRainBaseScene *> scenes_;
   TwBar &tweak_bar_;
+  TestSceneGraph test_graph_;
+  mojgame::SceneGraphIterator graph_iter_;
   bool ongoing_;
-  int current_;
-  unsigned int cursor_;
 };
 
 #endif /* CORE_GRACEFULRAINGAME_H_ */

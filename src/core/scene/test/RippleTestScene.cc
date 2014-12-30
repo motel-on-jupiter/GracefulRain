@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#include "core/scene/PhantomTestScene.h"
+#include "core/scene/test/RippleTestScene.h"
 #include "core/GracefulRainGame.h"
 #include "mojgame/auxiliary/gl/gl_planar_rendering.h"
 #include "mojgame/auxiliary/gl/gl_rendering.h"
@@ -12,49 +12,57 @@
 #include "mojgame/includer/glm_include.h"
 #include "mojgame/scene/Scene.h"
 
-PhantomTestScene::PhantomTestScene(TwBar &tweak_bar)
-    : GracefulRainBaseScene("Phantom Test", &renderer_, tweak_bar),
-      renderer_(),
-      phantom_stimulator_() {
+RippleTestSceneRenderer::RippleTestSceneRenderer()
+    : mojgame::RippleGLRenderer() {
 }
 
-bool PhantomTestScene::OnInitial(const glm::vec2 &window_size) {
+const std::string RippleTestScene::kName("Ripple Test");
+
+RippleTestScene::RippleTestScene(TwBar &tweak_bar)
+    : GracefulRainBaseScene(kName.c_str(), &renderer_, tweak_bar),
+      renderer_(),
+      rainy_stimulator_(),
+      walker_stimulator_() {
+}
+
+bool RippleTestScene::OnInitial(const glm::vec2 &window_size) {
   if (!GracefulRainBaseScene::OnInitial(window_size)) {
     return false;
   }
-  phantom_stimulator_.Reset(window_size * 0.5f, 0.0f, 1.0f);
+  renderer_.Attach(rainy_stimulator_);
+  walker_stimulator_.Reset(window_size * 0.5f, 0.0f, 8.0f, 2.0f);
   return true;
 }
 
-bool PhantomTestScene::OnStep(float elapsed_time) {
+bool RippleTestScene::OnStep(float elapsed_time) {
   UNUSED(elapsed_time);
 
   return true;
 }
 
-bool PhantomTestScene::OnReaction(const SDL_KeyboardEvent &keyboard) {
+bool RippleTestScene::OnReaction(const SDL_KeyboardEvent &keyboard) {
   if (keyboard.type == SDL_KEYDOWN) {
     if (keyboard.keysym.sym == SDLK_w) {
       renderer_.Dettach();
-      renderer_.Attach(phantom_stimulator_);
-      phantom_stimulator_.Accel(0.2f);
+      renderer_.Attach(walker_stimulator_);
+      walker_stimulator_.set_move_forward(true);
     }
     if (keyboard.keysym.sym == SDLK_s) {
       renderer_.Dettach();
-      renderer_.Attach(phantom_stimulator_);
-      phantom_stimulator_.Brake(0.2f);
+      renderer_.Attach(walker_stimulator_);
+      walker_stimulator_.set_move_forward(false);
     }
     if (keyboard.keysym.sym == SDLK_d) {
-      phantom_stimulator_.Rotate(-0.2f);
+      walker_stimulator_.Rotate(-0.2f);
     }
     if (keyboard.keysym.sym == SDLK_a) {
-      phantom_stimulator_.Rotate(0.2f);
+      walker_stimulator_.Rotate(0.2f);
     }
   }
   return true;
 }
 
-bool PhantomTestScene::OnReaction(const SDL_MouseButtonEvent &button,
+bool RippleTestScene::OnReaction(const SDL_MouseButtonEvent &button,
                                  const glm::vec2 &window_size) {
   if (button.button == 1) {
     if (button.type == SDL_MOUSEBUTTONDOWN) {
@@ -69,7 +77,7 @@ bool PhantomTestScene::OnReaction(const SDL_MouseButtonEvent &button,
   return true;
 }
 
-bool PhantomTestScene::OnReaction(const SDL_MouseMotionEvent &motion,
+bool RippleTestScene::OnReaction(const SDL_MouseMotionEvent &motion,
                                  const glm::vec2 &window_size) {
   if (motion.state == SDL_PRESSED) {
     mojgame::RippleStimulus stimulus;

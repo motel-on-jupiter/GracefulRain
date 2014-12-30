@@ -12,8 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc" />
-    <ClCompile Include="..\src\core\scene\PhantomTestScene.cc" />
-    <ClCompile Include="..\src\core\scene\RippleTestScene.cc" />
+    <ClCompile Include="..\src\core\scene\test\PhantomTestScene.cc" />
+    <ClCompile Include="..\src\core\scene\test\RippleTestScene.cc" />
+    <ClCompile Include="..\src\core\scene\test\TestSceneGraph.cc" />
+    <ClCompile Include="..\src\core\scene\test\TestSelectorScene.cc" />
     <ClCompile Include="..\src\main.cc" />
     <ClCompile Include="..\src\mojgame\animation\Animation.cc" />
     <ClCompile Include="..\src\mojgame\animation\AnimationDrawer.cc" />
@@ -70,7 +72,6 @@
     <ClCompile Include="..\src\mojgame\misc\RadiconMover.cc" />
     <ClCompile Include="..\src\mojgame\sampler\color_sample.cc" />
     <ClCompile Include="..\src\mojgame\sampler\physics_constant.cc" />
-    <ClCompile Include="..\src\mojgame\scene\GraphDrivenScene.cc" />
     <ClCompile Include="..\src\mojgame\scene\Scene.cc" />
     <ClCompile Include="..\src\mojgame\scene\SceneGraph.cc" />
     <ClCompile Include="..\src\pch\precompile.cc">
@@ -83,8 +84,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h" />
-    <ClInclude Include="..\src\core\scene\PhantomTestScene.h" />
-    <ClInclude Include="..\src\core\scene\RippleTestScene.h" />
+    <ClInclude Include="..\src\core\scene\test\PhantomTestScene.h" />
+    <ClInclude Include="..\src\core\scene\test\RippleTestScene.h" />
+    <ClInclude Include="..\src\core\scene\test\TestSceneGraph.h" />
+    <ClInclude Include="..\src\core\scene\test\TestSelectorScene.h" />
     <ClInclude Include="..\src\mojgame\animation\Animation.h" />
     <ClInclude Include="..\src\mojgame\animation\AnimationDrawer.h" />
     <ClInclude Include="..\src\mojgame\animation\AnimationPlayer.h" />
@@ -137,7 +140,6 @@
     <ClInclude Include="..\src\mojgame\misc\RadiconMover.h" />
     <ClInclude Include="..\src\mojgame\sampler\color_sample.h" />
     <ClInclude Include="..\src\mojgame\sampler\physics_constant.h" />
-    <ClInclude Include="..\src\mojgame\scene\GraphDrivenScene.h" />
     <ClInclude Include="..\src\mojgame\scene\Scene.h" />
     <ClInclude Include="..\src\mojgame\scene\SceneGraph.h" />
     <ClInclude Include="..\src\pch\precompile.h" />

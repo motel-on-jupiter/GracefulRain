@@ -1,9 +1,10 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef CORE_SCENE_RIPPLETESTSCENE_H_
-#define CORE_SCENE_RIPPLETESTSCENE_H_
+#ifndef CORE_SCENE_TEST_RIPPLETESTSCENE_H_
+#define CORE_SCENE_TEST_RIPPLETESTSCENE_H_
 
+#include <string>
 #include "core/GracefulRainGame.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
 #include "mojgame/includer/atb_include.h"
@@ -18,6 +19,8 @@ class RippleTestSceneRenderer : public mojgame::RippleGLRenderer {
 
 class RippleTestScene : public GracefulRainBaseScene {
  public:
+  static const std::string kName;
+
   explicit RippleTestScene(TwBar &tweak_bar);
   virtual ~RippleTestScene() {
   }
@@ -37,4 +40,4 @@ class RippleTestScene : public GracefulRainBaseScene {
   mojgame::WalkerRippleStimulator walker_stimulator_;
 };
 
-#endif /* CORE_SCENE_RIPPLETESTSCENE_H_ */
+#endif /* CORE_SCENE_TEST_RIPPLETESTSCENE_H_ */

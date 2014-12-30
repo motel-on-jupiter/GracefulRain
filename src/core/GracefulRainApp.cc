@@ -2,10 +2,8 @@
  * Copyright (C) 2014 The Motel on Jupiter
  */
 #include "core/GracefulRainApp.h"
-
 #include <algorithm>
 #include <mmsystem.h>
-
 #include "core/GracefulRainGame.h"
 #include "core/GracefulRainTweakerContext.h"
 #include "mojgame/auxiliary/atb_aux.h"
@@ -23,7 +21,7 @@ const Uint32 GracefulRainApp::kWindowScale = 72;
 const Uint32 GracefulRainApp::kIdealFrameRate = 60;
 const int GracefulRainApp::kFPSCountSamplingTime = 1000;
 const int GracefulRainApp::kTweakBarWidth = 240;
-const unsigned char GracefulRainApp::kTweakBarColor[3] = {41, 126, 231};
+const unsigned char GracefulRainApp::kTweakBarColor[3] = { 41, 126, 231 };
 
 GracefulRainApp::GracefulRainApp()
     : window_(nullptr),
@@ -42,8 +40,10 @@ int GracefulRainApp::Run() {
   static const glm::vec2 kWindowSize = glm::vec2(kWindowWidth, kWindowHeight);
   static const int kGameLoopInterval = 1000 / kIdealFrameRate;
   static const float kGameLoopIntervalSec = 1.0f / kIdealFrameRate;
-  static const int kTweakBarHeight = std::max(static_cast<int>(kWindowHeight) - 20, 0);
-  static const glm::u32vec2 kTweakBarPosition(std::max(static_cast<int>(kWindowWidth) - kTweakBarWidth - 10, 0), 10);
+  static const int kTweakBarHeight =
+      std::max(static_cast<int>(kWindowHeight) - 20, 0);
+  static const glm::u32vec2 kTweakBarPosition(
+      std::max(static_cast<int>(kWindowWidth) - kTweakBarWidth - 10, 0), 10);
 
   mojgame::LOGGER().Info("Set up the application");
 
@@ -107,22 +107,31 @@ int GracefulRainApp::Run() {
   }
   tweak_bar_ = TwNewBar("TweakMenu");
   if (tweak_bar_ == nullptr) {
-    mojgame::LOGGER().Error( "Failed to create tweak bar (errmsg: %s)", TwGetLastError());
+    mojgame::LOGGER().Error("Failed to create tweak bar (errmsg: %s)",
+                            TwGetLastError());
     CleanUp();
     return -1;
   }
-  mojgame::atb_aux::DefineMenu(kTweakBarPosition, kTweakBarWidth, kTweakBarHeight, kTweakBarColor);
-  mojgame::atb_aux::AddInt32VarRO(*tweak_bar_, "System", "Actual Frame Rate", tweaker_ctx.system_actual_fps);
-  mojgame::atb_aux::AddFloatVarRW(*tweak_bar_, "System", "Time Speed", tweaker_ctx.system_time_speed, "min='0' max='30' step='0.5'");
+  mojgame::atb_aux::DefineMenu(kTweakBarPosition, kTweakBarWidth,
+                               kTweakBarHeight, kTweakBarColor);
+  mojgame::atb_aux::AddInt32VarRO(*tweak_bar_, "System", "Actual Frame Rate",
+                                  tweaker_ctx.system_actual_fps);
+  mojgame::atb_aux::AddFloatVarRW(*tweak_bar_, "System", "Time Speed",
+                                  tweaker_ctx.system_time_speed,
+                                  "min='0' max='30' step='0.5'");
 
   // Initialize the game
   game_ = new GracefulRainGame(*tweak_bar_);
   if (game_ == nullptr) {
-    mojgame::LOGGER().Error( "Failed to create game object)");
+    mojgame::LOGGER().Error("Failed to create game object");
     CleanUp();
     return -1;
   }
-  game_->Initialize();
+  if (!game_->Initialize(kWindowSize)) {
+    mojgame::LOGGER().Error("Failed to initialize game object");
+    CleanUp();
+    return -1;
+  }
 
   // Set the minimum timer resolution
   timeBeginPeriod(1);
@@ -145,7 +154,7 @@ int GracefulRainApp::Run() {
           break;
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-          game_->React(event.key, kWindowSize);
+          game_->React(event.key);
           break;
         case SDL_MOUSEMOTION:
           game_->React(event.motion, kWindowSize);
@@ -164,7 +173,8 @@ int GracefulRainApp::Run() {
     }
 
     // Update the game
-    if (!game_->Step(kGameLoopIntervalSec * tweaker_ctx.system_time_speed)) {
+    if (!game_->Step(kGameLoopIntervalSec * tweaker_ctx.system_time_speed,
+                     kWindowSize)) {
       mojgame::LOGGER().Error("Failed to step the game");
       loop_stat = -1;
       break;
@@ -213,9 +223,8 @@ void GracefulRainApp::CleanUp() {
           TwGetLastError());
     }
     if (TwDeleteBar(tweak_bar_) == 0) {
-      mojgame::LOGGER().Warn(
-          "Failed to delete tweak bar (errmsg: %s)",
-          TwGetLastError());
+      mojgame::LOGGER().Warn("Failed to delete tweak bar (errmsg: %s)",
+                             TwGetLastError());
     }
     tweak_bar_ = nullptr;
   }

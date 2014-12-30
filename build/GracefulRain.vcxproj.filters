@@ -73,6 +73,9 @@
     <Filter Include="src\core\ripple_stimulator">
       <UniqueIdentifier>{69f54fb5-6394-4139-965a-a93e8fec620d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\core\scene\test">
+      <UniqueIdentifier>{b181261d-503d-4d29-aad8-788b3ce4fb76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cc">
@@ -89,9 +92,6 @@
     </ClCompile>
     <ClCompile Include="..\src\core\GracefulRainApp.cc">
       <Filter>src\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mojgame\scene\GraphDrivenScene.cc">
-      <Filter>src\mojgame\scene</Filter>
     </ClCompile>
     <ClCompile Include="..\src\mojgame\scene\SceneGraph.cc">
       <Filter>src\mojgame\scene</Filter>
@@ -219,9 +219,6 @@
     <ClCompile Include="..\src\mojgame\scene\Scene.cc">
       <Filter>src\mojgame\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\core\scene\RippleTestScene.cc">
-      <Filter>src\core\scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\mojgame\catalogue\renderer\GradationalRenderer.cc">
       <Filter>src\mojgame\catalogue\renderer</Filter>
     </ClCompile>
@@ -234,8 +231,17 @@
     <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc">
       <Filter>src\core\ripple_stimulator</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\core\scene\PhantomTestScene.cc">
-      <Filter>src\core\scene</Filter>
+    <ClCompile Include="..\src\core\scene\test\TestSceneGraph.cc">
+      <Filter>src\core\scene\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\test\TestSelectorScene.cc">
+      <Filter>src\core\scene\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\test\PhantomTestScene.cc">
+      <Filter>src\core\scene\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\test\RippleTestScene.cc">
+      <Filter>src\core\scene\test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -250,9 +256,6 @@
     </ClInclude>
     <ClInclude Include="..\src\core\GracefulRainApp.h">
       <Filter>src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\mojgame\scene\GraphDrivenScene.h">
-      <Filter>src\mojgame\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mojgame\scene\SceneGraph.h">
       <Filter>src\mojgame\scene</Filter>
@@ -407,9 +410,6 @@
     <ClInclude Include="..\src\mojgame\scene\Scene.h">
       <Filter>src\mojgame\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\core\scene\RippleTestScene.h">
-      <Filter>src\core\scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\mojgame\catalogue\renderer\GradationalRenderer.h">
       <Filter>src\mojgame\catalogue\renderer</Filter>
     </ClInclude>
@@ -422,8 +422,17 @@
     <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h">
       <Filter>src\core\ripple_stimulator</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\core\scene\PhantomTestScene.h">
-      <Filter>src\core\scene</Filter>
+    <ClInclude Include="..\src\core\scene\test\TestSceneGraph.h">
+      <Filter>src\core\scene\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\test\TestSelectorScene.h">
+      <Filter>src\core\scene\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\test\PhantomTestScene.h">
+      <Filter>src\core\scene\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\test\RippleTestScene.h">
+      <Filter>src\core\scene\test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
