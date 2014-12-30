@@ -255,6 +255,9 @@
     <ClCompile Include="..\src\core\scene\production\ProductionSceneGraph.cc">
       <Filter>src\core\scene\producution</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\core\scene\production\ProductionScene.cc">
+      <Filter>src\core\scene\producution</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\pch\precompile.h">
@@ -453,6 +456,9 @@
       <Filter>src\core\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\scene\production\ProductionSceneGraph.h">
+      <Filter>src\core\scene\producution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\production\ProductionScene.h">
       <Filter>src\core\scene\producution</Filter>
     </ClInclude>
   </ItemGroup>

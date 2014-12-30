@@ -1,6 +1,7 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
+#include "core/scene/production/ProductionScene.h"
 #include "core/scene/production/ProductionSceneGraph.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
 #include "mojgame/includer/atb_include.h"
@@ -10,6 +11,12 @@
 bool ProductionSceneGraph::SetUp(TwBar &tweak_bar) {
   UNUSED(&tweak_bar);
 
+  mojgame::BaseScene *scene = new ProductionScene(tweak_bar);
+  if (scene == nullptr) {
+    return false;
+  }
+  pool_[ProductionScene::kName] = scene;
+  InsertAsRoot(pool_[ProductionScene::kName]);
   return true;
 }
 
