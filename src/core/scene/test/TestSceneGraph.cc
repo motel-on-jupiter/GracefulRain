@@ -5,6 +5,7 @@
 #include "core/scene/test/PhantomTestScene.h"
 #include "core/scene/test/RippleTestScene.h"
 #include "core/scene/test/TestSelectorScene.h"
+#include "mojgame/includer/atb_include.h"
 #include "mojgame/scene/Scene.h"
 #include "mojgame/scene/SceneGraph.h"
 

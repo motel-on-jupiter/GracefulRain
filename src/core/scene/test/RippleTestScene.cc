@@ -2,7 +2,7 @@
  * Copyright (C) 2014 The Motel On Jupiter
  */
 #include "core/scene/test/RippleTestScene.h"
-#include "core/GracefulRainGame.h"
+#include "core/scene/GracefulRainScene.h"
 #include "mojgame/auxiliary/gl/gl_planar_rendering.h"
 #include "mojgame/auxiliary/gl/gl_rendering.h"
 #include "mojgame/auxiliary/csyntax_aux.h"

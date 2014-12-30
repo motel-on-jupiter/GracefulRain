@@ -5,7 +5,7 @@
 #define CORE_SCENE_TEST_TESTSELECTORSCENE_H_
 
 #include <vector>
-#include "core/GracefulRainGame.h"
+#include "core/scene/GracefulRainScene.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
 #include "mojgame/scene/SceneGraph.h"
 

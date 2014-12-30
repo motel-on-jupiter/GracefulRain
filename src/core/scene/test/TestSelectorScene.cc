@@ -2,6 +2,7 @@
  * Copyright (C) 2014 The Motel on Jupiter
  */
 #include "core/scene/test/TestSelectorScene.h"
+#include "core/scene/GracefulRainScene.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
 
 const std::string TestSelectorScene::kName("Test Selector");

@@ -22,6 +22,7 @@ const Uint32 GracefulRainApp::kIdealFrameRate = 60;
 const int GracefulRainApp::kFPSCountSamplingTime = 1000;
 const int GracefulRainApp::kTweakBarWidth = 240;
 const unsigned char GracefulRainApp::kTweakBarColor[3] = { 41, 126, 231 };
+const bool GracefulRainApp::kTestMode = false;
 
 GracefulRainApp::GracefulRainApp()
     : window_(nullptr),
@@ -127,7 +128,7 @@ int GracefulRainApp::Run() {
     CleanUp();
     return -1;
   }
-  if (!game_->Initialize(kWindowSize)) {
+  if (!game_->Initialize(kWindowSize, kTestMode)) {
     mojgame::LOGGER().Error("Failed to initialize game object");
     CleanUp();
     return -1;

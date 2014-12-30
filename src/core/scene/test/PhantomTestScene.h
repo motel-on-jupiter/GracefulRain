@@ -5,7 +5,7 @@
 #define CORE_SCENE_TEST_PHANTOMTESTSCENE_H_
 
 #include <string>
-#include "core/GracefulRainGame.h"
+#include "core/scene/GracefulRainScene.h"
 #include "core/ripple_stimulator/PhantomRippleStimulator.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
 #include "mojgame/includer/atb_include.h"

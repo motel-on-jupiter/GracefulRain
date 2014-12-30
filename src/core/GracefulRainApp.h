@@ -24,6 +24,7 @@ class GracefulRainApp {
   static const int kFPSCountSamplingTime;
   static const int kTweakBarWidth;
   static const unsigned char kTweakBarColor[3];
+  static const bool kTestMode;
 
   void CleanUp();
 

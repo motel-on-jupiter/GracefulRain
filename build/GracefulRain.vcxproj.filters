@@ -76,6 +76,9 @@
     <Filter Include="src\core\scene\test">
       <UniqueIdentifier>{b181261d-503d-4d29-aad8-788b3ce4fb76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\core\scene\producution">
+      <UniqueIdentifier>{dc9852e1-919f-4672-864f-13b350d31173}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cc">
@@ -242,6 +245,15 @@
     </ClCompile>
     <ClCompile Include="..\src\core\scene\test\RippleTestScene.cc">
       <Filter>src\core\scene\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\GracefulRainScene.cc">
+      <Filter>src\core\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\GracefulRainSceneGraph.cc">
+      <Filter>src\core\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\scene\production\ProductionSceneGraph.cc">
+      <Filter>src\core\scene\producution</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +445,15 @@
     </ClInclude>
     <ClInclude Include="..\src\core\scene\test\RippleTestScene.h">
       <Filter>src\core\scene\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\GracefulRainScene.h">
+      <Filter>src\core\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\GracefulRainSceneGraph.h">
+      <Filter>src\core\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\scene\production\ProductionSceneGraph.h">
+      <Filter>src\core\scene\producution</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

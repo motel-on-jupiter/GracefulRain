@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef CORE_SCENE_TEST_TESTSCENEGRAPH_H_
-#define CORE_SCENE_TEST_TESTSCENEGRAPH_H_
+#ifndef CORE_SCENE_PRODUCTION_PRODUCTIONSCENEGRAPH_H_
+#define CORE_SCENE_PRODUCTION_PRODUCTIONSCENEGRAPH_H_
 
 #include <map>
 #include "core/scene/GracefulRainSceneGraph.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/scene/Scene.h"
 
-class TestSceneGraph : public GracefulRainSceneGraph {
+class ProductionSceneGraph : public GracefulRainSceneGraph {
  public:
-  TestSceneGraph()
+  ProductionSceneGraph()
       : GracefulRainSceneGraph() {
   }
 
@@ -24,4 +24,4 @@ class TestSceneGraph : public GracefulRainSceneGraph {
   std::map<std::string, mojgame::BaseScene *> pool_;
 };
 
-#endif /* CORE_SCENE_TEST_TESTSCENEGRAPH_H_ */
+#endif /* CORE_SCENE_PRODUCTION_PRODUCTIONSCENEGRAPH_H_ */
