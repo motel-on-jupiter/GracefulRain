@@ -26,13 +26,9 @@ bool TestSelectorScene::OnStep(float elapsed_time) {
 }
 
 bool TestSelectorScene::OnRendering(const glm::vec2 &window_size) {
-  mojgame::gl_rendering::clear_color_buffer();
-  mojgame::gl_rendering::clear_depth_buffer();
-
   glMatrixMode (GL_PROJECTION);
   glLoadMatrixf(
       glm::value_ptr(glm::ortho(0.0f, window_size.x, window_size.y, 0.0f)));
-
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity();
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

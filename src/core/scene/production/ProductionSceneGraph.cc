@@ -17,6 +17,7 @@ bool ProductionSceneGraph::SetUp(TwBar &tweak_bar) {
   }
   pool_[ProductionScene::kName] = scene;
   InsertAsRoot(pool_[ProductionScene::kName]);
+  InsertAsLeaf(pool_[ProductionScene::kName]);
   return true;
 }
 

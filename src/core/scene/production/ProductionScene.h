@@ -1,21 +1,16 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef CORE_SCENE_TEST_RIPPLETESTSCENE_H_
-#define CORE_SCENE_TEST_RIPPLETESTSCENE_H_
+#ifndef CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_
+#define CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_
 
 #include <string>
 #include "core/scene/GracefulRainScene.h"
+#include "mojgame/auxiliary/coroutine_aux.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
+#include "mojgame/catalogue/renderer/TelopRenderer.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/scene/Scene.h"
-
-class ProductionSceneRenderer : public mojgame::RippleGLRenderer {
- public:
-  ProductionSceneRenderer();
-  virtual ~ProductionSceneRenderer() {
-  }
-};
 
 class ProductionScene : public GracefulRainBaseScene {
  public:
@@ -26,16 +21,21 @@ class ProductionScene : public GracefulRainBaseScene {
   }
 
  protected:
-  virtual bool OnInitial(const glm::vec2 &window_size);
-  virtual bool OnStep(float elapsed_time);
-  virtual bool OnReaction(const SDL_MouseButtonEvent &button,
-                          const glm::vec2 &window_size);
-  virtual bool OnReaction(const SDL_MouseMotionEvent &motion,
-                          const glm::vec2 &window_size);
+  bool OnInitial(const glm::vec2 &window_size);
+  void OnFinal();
+  bool OnStep(float elapsed_time);
+  bool OnRendering(const glm::vec2 &window_size);
+  bool OnReaction(const SDL_MouseButtonEvent &button,
+                  const glm::vec2 &window_size);
+  bool OnReaction(const SDL_MouseMotionEvent &motion,
+                  const glm::vec2 &window_size);
 
  private:
-  ProductionSceneRenderer renderer_;
+  mojgame::RippleGLRenderer ripple_renderer_;
   mojgame::RainyRippleStimulator rainy_stimulator_;
+  mojgame::GLTelopRenderer telop_renderer_;
+  std::vector<mojgame::BaseRenderer *> renderer_stack_;
+  void *ccr_param_;
 };
 
-#endif /* CORE_SCENE_TEST_RIPPLETESTSCENE_H_ */
+#endif /* CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_ */

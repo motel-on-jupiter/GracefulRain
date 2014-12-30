@@ -182,6 +182,8 @@ int GracefulRainApp::Run() {
     }
 
     // Render the objects
+    mojgame::gl_rendering::clear_color_buffer();
+    mojgame::gl_rendering::clear_depth_buffer();
     if (!game_->Render(kWindowSize)) {
       mojgame::LOGGER().Error("Failed to render the game");
       loop_stat = -1;

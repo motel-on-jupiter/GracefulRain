@@ -255,6 +255,9 @@
     <ClCompile Include="..\src\core\scene\production\ProductionSceneGraph.cc">
       <Filter>src\core\scene\producution</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mojgame\catalogue\renderer\TelopRenderer.cc">
+      <Filter>src\mojgame\catalogue\renderer</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\core\scene\production\ProductionScene.cc">
       <Filter>src\core\scene\producution</Filter>
     </ClCompile>
@@ -457,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="..\src\core\scene\production\ProductionSceneGraph.h">
       <Filter>src\core\scene\producution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\catalogue\renderer\TelopRenderer.h">
+      <Filter>src\mojgame\catalogue\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\scene\production\ProductionScene.h">
       <Filter>src\core\scene\producution</Filter>
