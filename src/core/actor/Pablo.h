@@ -1,14 +1,15 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef CORE_ACTOR_RINA_H_
-#define CORE_ACTOR_RINA_H_
+#ifndef CORE_ACTOR_PABLO_H_
+#define CORE_ACTOR_PABLO_H_
 
 #include "core/actor/GracefulRainHuman.h"
+#include "mojgame/includer/glm_include.h"
 
-class Rina : public GracefulRainHuman {
+class Pablo : public GracefulRainHuman {
  public:
-  Rina()
+  Pablo()
       : GracefulRainHuman(kSpeed, kFeetMargin) {
   }
 
@@ -17,4 +18,4 @@ class Rina : public GracefulRainHuman {
   static const float kFeetMargin;
 };
 
-#endif /* CORE_ACTOR_RINA_H_ */
+#endif /* CORE_ACTOR_PABLO_H_ */

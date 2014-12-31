@@ -20,7 +20,8 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       telop_renderer_(),
       renderer_stack_(),
       ccr_param_(nullptr),
-      rina_() {
+      rina_(),
+      pablo_() {
 }
 
 bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
@@ -69,6 +70,11 @@ void ProductionScene::Direct() {
   while (rina_.walking()) {
     ccrReturnV;
   }
+  pablo_.Appear(glm::vec2(1.0f, 0.0f));
+  pablo_.Walk(glm::vec2(0.0f, 1.0f));
+  while (pablo_.walking()) {
+    ccrReturnV;
+  }
   Finish();
   ccrFinishV;
 }
@@ -83,6 +89,13 @@ bool ProductionScene::OnStep(float elapsed_time) {
   }
   if (rina_.walking()) {
     rina_.Stimulate(ripple_renderer_);
+  }
+  if (!pablo_.Step(elapsed_time)) {
+    mojgame::LOGGER().Error("Failed to step Pablo");
+    return false;
+  }
+  if (pablo_.walking()) {
+    pablo_.Stimulate(ripple_renderer_);
   }
   return true;
 }

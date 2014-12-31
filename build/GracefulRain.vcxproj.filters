@@ -267,6 +267,15 @@
     <ClCompile Include="..\src\core\actor\Rina.cc">
       <Filter>src\core\actor</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\core\actor\GracefulRainHuman.cc">
+      <Filter>src\core\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\actor\Pablo.cc">
+      <Filter>src\core\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mojgame\entity\PlanarActor.cc">
+      <Filter>src\mojgame\entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\pch\precompile.h">
@@ -475,6 +484,15 @@
     </ClInclude>
     <ClInclude Include="..\src\core\actor\Rina.h">
       <Filter>src\core\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\actor\GracefulRainHuman.h">
+      <Filter>src\core\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\actor\Pablo.h">
+      <Filter>src\core\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\entity\PlanarActor.h">
+      <Filter>src\mojgame\entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

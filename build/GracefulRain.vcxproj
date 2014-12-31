@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\core\actor\GracefulRainHuman.cc" />
+    <ClCompile Include="..\src\core\actor\Pablo.cc" />
     <ClCompile Include="..\src\core\actor\Rina.cc" />
     <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc" />
     <ClCompile Include="..\src\core\scene\GracefulRainScene.cc" />
@@ -56,6 +58,7 @@
     <ClCompile Include="..\src\mojgame\catalogue\renderer\TelopRenderer.cc" />
     <ClCompile Include="..\src\mojgame\catalogue\scene\TitleScene.cc" />
     <ClCompile Include="..\src\mojgame\entity\CubicEntity.cc" />
+    <ClCompile Include="..\src\mojgame\entity\PlanarActor.cc" />
     <ClCompile Include="..\src\mojgame\entity\PlanarEntity.cc" />
     <ClCompile Include="..\src\mojgame\external\ini.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -89,6 +92,8 @@
     <ClCompile Include="..\src\core\GracefulRainTweakerContext.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\core\actor\GracefulRainHuman.h" />
+    <ClInclude Include="..\src\core\actor\Pablo.h" />
     <ClInclude Include="..\src\core\actor\Rina.h" />
     <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h" />
     <ClInclude Include="..\src\core\scene\GracefulRainScene.h" />
@@ -133,6 +138,7 @@
     <ClInclude Include="..\src\mojgame\catalogue\renderer\TelopRenderer.h" />
     <ClInclude Include="..\src\mojgame\catalogue\scene\TitleScene.h" />
     <ClInclude Include="..\src\mojgame\entity\CubicEntity.h" />
+    <ClInclude Include="..\src\mojgame\entity\PlanarActor.h" />
     <ClInclude Include="..\src\mojgame\entity\PlanarEntity.h" />
     <ClInclude Include="..\src\mojgame\external\coroutine.h" />
     <ClInclude Include="..\src\mojgame\external\ini.h" />

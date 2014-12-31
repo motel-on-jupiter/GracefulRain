@@ -5,6 +5,7 @@
 #define CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_
 
 #include <string>
+#include "core/actor/Pablo.h"
 #include "core/actor/Rina.h"
 #include "core/scene/GracefulRainScene.h"
 #include "mojgame/auxiliary/coroutine_aux.h"
@@ -40,6 +41,7 @@ class ProductionScene : public GracefulRainBaseScene {
   std::vector<mojgame::BaseRenderer *> renderer_stack_;
   void *ccr_param_;
   Rina rina_;
+  Pablo pablo_;
 };
 
 #endif /* CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_ */
