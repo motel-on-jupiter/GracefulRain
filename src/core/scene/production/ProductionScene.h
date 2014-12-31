@@ -1,11 +1,13 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_
-#define CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_
+#ifndef CORE_SCENE_PRODUCTION_PRODUCTIONSCENE_H_
+#define CORE_SCENE_PRODUCTION_PRODUCTIONSCENE_H_
 
 #include <string>
+#include <vector>
 #include "core/actor/Pablo.h"
+#include "core/actor/Phantom.h"
 #include "core/actor/Rina.h"
 #include "core/scene/GracefulRainScene.h"
 #include "mojgame/auxiliary/coroutine_aux.h"
@@ -42,6 +44,7 @@ class ProductionScene : public GracefulRainBaseScene {
   void *ccr_param_;
   Rina rina_;
   Pablo pablo_;
+  Phantom phantoms_[8];
 };
 
-#endif /* CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_ */
+#endif /* CORE_SCENE_PRODUCTION_PRODUCTIONSCENE_H_ */

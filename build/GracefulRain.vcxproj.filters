@@ -267,14 +267,17 @@
     <ClCompile Include="..\src\core\actor\Rina.cc">
       <Filter>src\core\actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\core\actor\GracefulRainHuman.cc">
-      <Filter>src\core\actor</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\core\actor\Pablo.cc">
       <Filter>src\core\actor</Filter>
     </ClCompile>
     <ClCompile Include="..\src\mojgame\entity\PlanarActor.cc">
       <Filter>src\mojgame\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\actor\GracefulRainActor.cc">
+      <Filter>src\core\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\actor\Phantom.cc">
+      <Filter>src\core\actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,14 +488,17 @@
     <ClInclude Include="..\src\core\actor\Rina.h">
       <Filter>src\core\actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\core\actor\GracefulRainHuman.h">
-      <Filter>src\core\actor</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\core\actor\Pablo.h">
       <Filter>src\core\actor</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mojgame\entity\PlanarActor.h">
       <Filter>src\mojgame\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\actor\GracefulRainActor.h">
+      <Filter>src\core\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\actor\Phantom.h">
+      <Filter>src\core\actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

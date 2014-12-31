@@ -4,13 +4,13 @@
 #ifndef CORE_ACTOR_PABLO_H_
 #define CORE_ACTOR_PABLO_H_
 
-#include "core/actor/GracefulRainHuman.h"
+#include "core/actor/GracefulRainActor.h"
 #include "mojgame/includer/glm_include.h"
 
-class Pablo : public GracefulRainHuman {
+class Pablo : public GracefulRainActor {
  public:
   Pablo()
-      : GracefulRainHuman(kSpeed, kFeetMargin) {
+      : GracefulRainActor(kSpeed, kFeetMargin) {
   }
 
  private:

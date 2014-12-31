@@ -4,12 +4,12 @@
 #ifndef CORE_ACTOR_RINA_H_
 #define CORE_ACTOR_RINA_H_
 
-#include "core/actor/GracefulRainHuman.h"
+#include "core/actor/GracefulRainActor.h"
 
-class Rina : public GracefulRainHuman {
+class Rina : public GracefulRainActor {
  public:
   Rina()
-      : GracefulRainHuman(kSpeed, kFeetMargin) {
+      : GracefulRainActor(kSpeed, kFeetMargin) {
   }
 
  private:

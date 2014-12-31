@@ -11,8 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\core\actor\GracefulRainHuman.cc" />
+    <ClCompile Include="..\src\core\actor\GracefulRainActor.cc" />
     <ClCompile Include="..\src\core\actor\Pablo.cc" />
+    <ClCompile Include="..\src\core\actor\Phantom.cc" />
     <ClCompile Include="..\src\core\actor\Rina.cc" />
     <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc" />
     <ClCompile Include="..\src\core\scene\GracefulRainScene.cc" />
@@ -92,8 +93,9 @@
     <ClCompile Include="..\src\core\GracefulRainTweakerContext.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\core\actor\GracefulRainHuman.h" />
+    <ClInclude Include="..\src\core\actor\GracefulRainActor.h" />
     <ClInclude Include="..\src\core\actor\Pablo.h" />
+    <ClInclude Include="..\src\core\actor\Phantom.h" />
     <ClInclude Include="..\src\core\actor\Rina.h" />
     <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h" />
     <ClInclude Include="..\src\core\scene\GracefulRainScene.h" />

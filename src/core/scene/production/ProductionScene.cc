@@ -2,6 +2,8 @@
  * Copyright (C) 2014 The Motel On Jupiter
  */
 #include "core/scene/production/ProductionScene.h"
+#include <string>
+#include <vector>
 #include "core/scene/GracefulRainScene.h"
 #include "mojgame/auxiliary/coroutine_aux.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
@@ -11,7 +13,7 @@
 #include "mojgame/includer/glm_include.h"
 #include "mojgame/scene/Scene.h"
 
-const std::string ProductionScene::kName("Curtain Up");
+const std::string ProductionScene::kName("Production");
 
 ProductionScene::ProductionScene(TwBar &tweak_bar)
     : GracefulRainBaseScene(kName.c_str(), nullptr, tweak_bar),
@@ -21,7 +23,8 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       renderer_stack_(),
       ccr_param_(nullptr),
       rina_(),
-      pablo_() {
+      pablo_(),
+      phantoms_() {
 }
 
 bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
@@ -45,38 +48,86 @@ void ProductionScene::OnFinal() {
 }
 
 void ProductionScene::Direct() {
+  int i = 0;
   ccrAsContParam(ccr_param_);
-  ccrBeginContext;
+  ccrBeginContext
+    ;
   ccrEndContext(ctx);
-  ccrBegin_(ctx);
+  ccrBegin_(ctx)
+  ;
   while (time() < 2.0f) {
-    ccrReturnV;
+    ccrReturnV
+    ;
   }
   telop_renderer_.Reset("Developed by The Motel on Jupiter", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
-  while (time() < 5.0f) {
-    ccrReturnV;
+  while (time() < 7.0f) {
+    ccrReturnV
+    ;
+  }
+  renderer_stack_.pop_back();
+  while (time() < 1.0f) {
+    ccrReturnV
+    ;
   }
   telop_renderer_.Reset("Lost In Rain", glm::vec2(0.5f));
-  while (time() < 10.0f) {
-    ccrReturnV;
+  renderer_stack_.push_back(&telop_renderer_);
+  while (time() < 12.0f) {
+    ccrReturnV
+    ;
   }
   renderer_stack_.pop_back();
   while (time() < 2.0f) {
-    ccrReturnV;
+    ccrReturnV
+    ;
   }
   rina_.Appear(glm::vec2(1.0f, 0.0f));
   rina_.Walk(glm::vec2(0.0f, 1.0f));
   while (rina_.walking()) {
-    ccrReturnV;
+    ccrReturnV
+    ;
   }
   pablo_.Appear(glm::vec2(1.0f, 0.0f));
   pablo_.Walk(glm::vec2(0.0f, 1.0f));
   while (pablo_.walking()) {
-    ccrReturnV;
+    ccrReturnV
+    ;
   }
-  Finish();
-  ccrFinishV;
+  rina_.Appear(glm::vec2(1.0f, 0.0f));
+  rina_.Walk(glm::vec2(0.5f));
+  while (rina_.walking()) {
+    ccrReturnV
+    ;
+  }
+  phantoms_[0].Appear(glm::vec2(0.45f, 0.0f));
+  phantoms_[0].Walk(glm::vec2(0.45f, 0.4f));
+  phantoms_[1].Appear(glm::vec2(0.55f, 0.0f));
+  phantoms_[1].Walk(glm::vec2(0.55f, 0.4f));
+  phantoms_[2].Appear(glm::vec2(0.0f, 0.45f));
+  phantoms_[2].Walk(glm::vec2(0.4f, 0.45f));
+  phantoms_[3].Appear(glm::vec2(0.0f, 0.55f));
+  phantoms_[3].Walk(glm::vec2(0.4f, 0.55f));
+  phantoms_[4].Appear(glm::vec2(0.45f, 1.0f));
+  phantoms_[4].Walk(glm::vec2(0.45f, 0.6f));
+  phantoms_[5].Appear(glm::vec2(0.55f, 1.0f));
+  phantoms_[5].Walk(glm::vec2(0.55f, 0.6f));
+  phantoms_[6].Appear(glm::vec2(1.0f, 0.45f));
+  phantoms_[6].Walk(glm::vec2(0.6f, 0.45f));
+  phantoms_[7].Appear(glm::vec2(1.0f, 0.55f));
+  phantoms_[7].Walk(glm::vec2(0.6f, 0.55f));
+  for (i = 0; i < ARRAYSIZE(phantoms_); ++i) {
+    while (phantoms_[i].walking()) {
+      ccrReturnV
+      ;
+    }
+  }
+  telop_renderer_.Reset("Fin", glm::vec2(0.5f));
+  renderer_stack_.push_back(&telop_renderer_);
+  while (true) {
+    ccrReturnV
+    ;
+  }
+ccrFinishV;
 }
 
 bool ProductionScene::OnStep(float elapsed_time) {
@@ -96,6 +147,15 @@ bool ProductionScene::OnStep(float elapsed_time) {
   }
   if (pablo_.walking()) {
     pablo_.Stimulate(ripple_renderer_);
+  }
+  for (int i = 0; i < ARRAYSIZE(phantoms_); ++i) {
+    if (!phantoms_[i].Step(elapsed_time)) {
+      mojgame::LOGGER().Error("Failed to step Phantom (idx: %d)", i);
+      return false;
+    }
+    if (phantoms_[i].walking()) {
+      phantoms_[i].Stimulate(ripple_renderer_);
+    }
   }
   return true;
 }
