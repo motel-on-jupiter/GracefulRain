@@ -3,5 +3,6 @@
  */
 #include "core/actor/Pablo.h"
 
-const float Pablo::kSpeed = 0.05f;
-const float Pablo::kFeetMargin = 0.01f;
+const float Pablo::kSpeed = 0.04f;
+const float Pablo::kStepLength = 0.015f;
+const float Pablo::kFeetMargin = 0.005f;

@@ -50,54 +50,44 @@ void ProductionScene::OnFinal() {
 void ProductionScene::Direct() {
   int i = 0;
   ccrAsContParam(ccr_param_);
-  ccrBeginContext
-    ;
+  ccrBeginContext;
   ccrEndContext(ctx);
-  ccrBegin_(ctx)
-  ;
+  ccrBegin_(ctx);
   while (time() < 2.0f) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   telop_renderer_.Reset("Developed by The Motel on Jupiter", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
   while (time() < 7.0f) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   renderer_stack_.pop_back();
   while (time() < 1.0f) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   telop_renderer_.Reset("Lost In Rain", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
   while (time() < 12.0f) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   renderer_stack_.pop_back();
   while (time() < 2.0f) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   rina_.Appear(glm::vec2(1.0f, 0.0f));
   rina_.Walk(glm::vec2(0.0f, 1.0f));
   while (rina_.walking()) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   pablo_.Appear(glm::vec2(1.0f, 0.0f));
   pablo_.Walk(glm::vec2(0.0f, 1.0f));
   while (pablo_.walking()) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   rina_.Appear(glm::vec2(1.0f, 0.0f));
   rina_.Walk(glm::vec2(0.5f));
   while (rina_.walking()) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
   phantoms_[0].Appear(glm::vec2(0.45f, 0.0f));
   phantoms_[0].Walk(glm::vec2(0.45f, 0.4f));
@@ -115,19 +105,17 @@ void ProductionScene::Direct() {
   phantoms_[6].Walk(glm::vec2(0.6f, 0.45f));
   phantoms_[7].Appear(glm::vec2(1.0f, 0.55f));
   phantoms_[7].Walk(glm::vec2(0.6f, 0.55f));
-  for (i = 0; i < ARRAYSIZE(phantoms_); ++i) {
+  for (i=0; i<ARRAYSIZE(phantoms_); ++i) {
     while (phantoms_[i].walking()) {
-      ccrReturnV
-      ;
+      ccrReturnV;
     }
   }
   telop_renderer_.Reset("Fin", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
   while (true) {
-    ccrReturnV
-    ;
+    ccrReturnV;
   }
-ccrFinishV;
+  ccrFinishV;
 }
 
 bool ProductionScene::OnStep(float elapsed_time) {
@@ -148,7 +136,7 @@ bool ProductionScene::OnStep(float elapsed_time) {
   if (pablo_.walking()) {
     pablo_.Stimulate(ripple_renderer_);
   }
-  for (int i = 0; i < ARRAYSIZE(phantoms_); ++i) {
+  for (int i=0; i<ARRAYSIZE(phantoms_); ++i) {
     if (!phantoms_[i].Step(elapsed_time)) {
       mojgame::LOGGER().Error("Failed to step Phantom (idx: %d)", i);
       return false;

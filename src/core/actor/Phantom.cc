@@ -3,4 +3,4 @@
  */
 #include "core/actor/Phantom.h"
 
-const float Phantom::kSpeed = 0.05f;
+const float Phantom::kSpeed = 0.02f;

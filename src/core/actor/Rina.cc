@@ -4,4 +4,5 @@
 #include "core/actor/Rina.h"
 
 const float Rina::kSpeed = 0.05f;
-const float Rina::kFeetMargin = 0.01f;
+const float Rina::kStepLength = 0.013f;
+const float Rina::kFeetMargin = 0.004f;

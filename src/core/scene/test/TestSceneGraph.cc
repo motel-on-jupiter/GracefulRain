@@ -2,7 +2,6 @@
  * Copyright (C) 2014 The Motel On Jupiter
  */
 #include "core/scene/test/TestSceneGraph.h"
-#include "core/scene/test/PhantomTestScene.h"
 #include "core/scene/test/RippleTestScene.h"
 #include "core/scene/test/TestSelectorScene.h"
 #include "mojgame/includer/atb_include.h"
@@ -29,23 +28,11 @@ bool TestSceneGraph::SetUp(TwBar &tweak_bar) {
     }
     pool_[RippleTestScene::kName] = sub_scene;
   }
-  {
-    mojgame::BaseScene *sub_scene = new PhantomTestScene(tweak_bar);
-    if (sub_scene == nullptr) {
-      mojgame::LOGGER().Error(
-          "Failed to allocate for phantom test scene object");
-      CleanUp();
-      return false;
-    }
-    pool_[PhantomTestScene::kName] = sub_scene;
-  }
 
   InsertAsRoot(pool_[TestSelectorScene::kName]);
   Insert(pool_[TestSelectorScene::kName], pool_[RippleTestScene::kName]);
-  Insert(pool_[TestSelectorScene::kName], pool_[PhantomTestScene::kName]);
   InsertAsLeaf(pool_[TestSelectorScene::kName]);
   InsertAsLeaf(pool_[RippleTestScene::kName]);
-  InsertAsLeaf(pool_[PhantomTestScene::kName]);
   return true;
 }
 

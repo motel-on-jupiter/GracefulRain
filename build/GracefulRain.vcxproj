@@ -15,12 +15,10 @@
     <ClCompile Include="..\src\core\actor\Pablo.cc" />
     <ClCompile Include="..\src\core\actor\Phantom.cc" />
     <ClCompile Include="..\src\core\actor\Rina.cc" />
-    <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc" />
     <ClCompile Include="..\src\core\scene\GracefulRainScene.cc" />
     <ClCompile Include="..\src\core\scene\GracefulRainSceneGraph.cc" />
     <ClCompile Include="..\src\core\scene\production\ProductionScene.cc" />
     <ClCompile Include="..\src\core\scene\production\ProductionSceneGraph.cc" />
-    <ClCompile Include="..\src\core\scene\test\PhantomTestScene.cc" />
     <ClCompile Include="..\src\core\scene\test\RippleTestScene.cc" />
     <ClCompile Include="..\src\core\scene\test\TestSceneGraph.cc" />
     <ClCompile Include="..\src\core\scene\test\TestSelectorScene.cc" />
@@ -97,12 +95,10 @@
     <ClInclude Include="..\src\core\actor\Pablo.h" />
     <ClInclude Include="..\src\core\actor\Phantom.h" />
     <ClInclude Include="..\src\core\actor\Rina.h" />
-    <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h" />
     <ClInclude Include="..\src\core\scene\GracefulRainScene.h" />
     <ClInclude Include="..\src\core\scene\GracefulRainSceneGraph.h" />
     <ClInclude Include="..\src\core\scene\production\ProductionScene.h" />
     <ClInclude Include="..\src\core\scene\production\ProductionSceneGraph.h" />
-    <ClInclude Include="..\src\core\scene\test\PhantomTestScene.h" />
     <ClInclude Include="..\src\core\scene\test\RippleTestScene.h" />
     <ClInclude Include="..\src\core\scene\test\TestSceneGraph.h" />
     <ClInclude Include="..\src\core\scene\test\TestSelectorScene.h" />

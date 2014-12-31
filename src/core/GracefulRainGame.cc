@@ -3,7 +3,6 @@
  */
 #include "core/GracefulRainGame.h"
 #include "core/scene/production/ProductionSceneGraph.h"
-#include "core/scene/test/PhantomTestScene.h"
 #include "core/scene/test/RippleTestScene.h"
 #include "core/scene/test/TestSceneGraph.h"
 #include "core/scene/GracefulRainScene.h"
@@ -52,6 +51,7 @@ bool GracefulRainGame::Initialize(const glm::vec2 &window_size, bool test) {
 }
 
 void GracefulRainGame::Finalize() {
+  graph_iter_->Clean();
   graph_->CleanUp();
 }
 

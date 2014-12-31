@@ -9,7 +9,7 @@
 class Phantom : public GracefulRainActor {
  public:
   Phantom()
-      : GracefulRainActor(kSpeed, 0.0f) {
+      : GracefulRainActor(kSpeed, 0.0f, 0.0f) {
   }
 
  private:

@@ -10,11 +10,12 @@
 class Pablo : public GracefulRainActor {
  public:
   Pablo()
-      : GracefulRainActor(kSpeed, kFeetMargin) {
+      : GracefulRainActor(kSpeed, kStepLength, kFeetMargin) {
   }
 
  private:
   static const float kSpeed;
+  static const float kStepLength;
   static const float kFeetMargin;
 };
 

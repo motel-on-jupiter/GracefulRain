@@ -9,11 +9,12 @@
 class Rina : public GracefulRainActor {
  public:
   Rina()
-      : GracefulRainActor(kSpeed, kFeetMargin) {
+      : GracefulRainActor(kSpeed, kStepLength, kFeetMargin) {
   }
 
  private:
   static const float kSpeed;
+  static const float kStepLength;
   static const float kFeetMargin;
 };
 

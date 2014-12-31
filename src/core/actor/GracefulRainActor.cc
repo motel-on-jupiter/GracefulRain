@@ -7,6 +7,14 @@
 #include "mojgame/includer/glm_include.h"
 
 void GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
+  step_count_ += glm::length(pos() - step_pos_);
+  step_pos_ = pos();
+  if (step_count_ < step_length_) {
+    return;
+  }
+  while (step_count_ > step_length_ && step_length_ > 0.0f) {
+    step_count_ -= step_length_;
+  }
   mojgame::RippleStimulus stimulus;
   glm::vec2 margin = glm::vec2(0.0f, feet_margin_ * 0.5f);
   if (left_landing_) {
