@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\core\actor\Rina.cc" />
     <ClCompile Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.cc" />
     <ClCompile Include="..\src\core\scene\GracefulRainScene.cc" />
     <ClCompile Include="..\src\core\scene\GracefulRainSceneGraph.cc" />
@@ -88,6 +89,7 @@
     <ClCompile Include="..\src\core\GracefulRainTweakerContext.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\core\actor\Rina.h" />
     <ClInclude Include="..\src\core\ripple_stimulator\PhantomRippleStimulator.h" />
     <ClInclude Include="..\src\core\scene\GracefulRainScene.h" />
     <ClInclude Include="..\src\core\scene\GracefulRainSceneGraph.h" />

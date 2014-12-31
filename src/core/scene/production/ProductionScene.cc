@@ -19,7 +19,8 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       rainy_stimulator_(),
       telop_renderer_(),
       renderer_stack_(),
-      ccr_param_(nullptr) {
+      ccr_param_(nullptr),
+      rina_() {
 }
 
 bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
@@ -42,31 +43,48 @@ void ProductionScene::OnFinal() {
   return GracefulRainBaseScene::OnFinal();
 }
 
-bool ProductionScene::OnStep(float elapsed_time) {
-  UNUSED(elapsed_time);
-
+void ProductionScene::Direct() {
   ccrAsContParam(ccr_param_);
   ccrBeginContext;
   ccrEndContext(ctx);
   ccrBegin_(ctx);
   while (time() < 2.0f) {
-    ccrReturn(true);
+    ccrReturnV;
   }
   telop_renderer_.Reset("Developed by The Motel on Jupiter", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
   while (time() < 5.0f) {
-    ccrReturn(true);
+    ccrReturnV;
   }
   telop_renderer_.Reset("Lost In Rain", glm::vec2(0.5f));
   while (time() < 10.0f) {
-    ccrReturn(true);
+    ccrReturnV;
   }
   renderer_stack_.pop_back();
   while (time() < 2.0f) {
-    ccrReturn(true);
+    ccrReturnV;
+  }
+  rina_.Appear(glm::vec2(1.0f, 0.0f));
+  rina_.Walk(glm::vec2(0.0f, 1.0f));
+  while (rina_.walking()) {
+    ccrReturnV;
   }
   Finish();
-  ccrFinish(true);
+  ccrFinishV;
+}
+
+bool ProductionScene::OnStep(float elapsed_time) {
+  if (!finished()) {
+    Direct();
+  }
+  if (!rina_.Step(elapsed_time)) {
+    mojgame::LOGGER().Error("Failed to step Rina");
+    return false;
+  }
+  if (rina_.walking()) {
+    rina_.Stimulate(ripple_renderer_);
+  }
+  return true;
 }
 
 bool ProductionScene::OnRendering(const glm::vec2 &window_size) {
@@ -87,7 +105,7 @@ bool ProductionScene::OnReaction(const SDL_MouseButtonEvent &button,
                                static_cast<float>(button.y)) / window_size;
       stimulus.pos.y = 1.0f - stimulus.pos.y;
       stimulus.effect = 1.0f;
-      ripple_renderer_.Stimulate(stimulus);
+      ripple_renderer_.Receive(stimulus);
     }
   }
   return true;
@@ -101,7 +119,7 @@ bool ProductionScene::OnReaction(const SDL_MouseMotionEvent &motion,
                              static_cast<float>(motion.y)) / window_size;
     stimulus.pos.y = 1.0f - stimulus.pos.y;
     stimulus.effect = 1.0f;
-    ripple_renderer_.Stimulate(stimulus);
+    ripple_renderer_.Receive(stimulus);
   }
   return true;
 }

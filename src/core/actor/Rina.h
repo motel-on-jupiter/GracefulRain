@@ -4,18 +4,26 @@
 #ifndef CORE_ACTOR_RINA_H_
 #define CORE_ACTOR_RINA_H_
 
-#include "mojgame/entity/PlanarEntity.h"
+#include "mojgame/catalogue/renderer/RippleRenderer.h"
+#include "mojgame/entity/PlanarActor.h"
+#include "mojgame/includer/glm_include.h"
 
-class Rina : public mojgame::PlanarEntity {
+class Rina : public mojgame::PlanarActor {
  public:
-  Rina() : mojgame::WalkerRippleStimulator() {
+  Rina()
+      : mojgame::PlanarActor(kSpeed),
+        left_landing_(true) {
   }
-  void Reset(const glm::vec2 &pos, float dir, float speed, bool move_forward = true) {
-    mojgame::WalkerRippleStimulator::Reset(pos, dir, speed, 0.0f, false, move_forward);
-  }
-  virtual bool IsDead() const {
-    return false;
-  }
+  void Stimulate(mojgame::RippleGLRenderer &renderer);
+
+ protected:
+  void OnAppearing(const glm::vec2 &pos, float rot, const glm::vec2 &size);
+
+ private:
+  static const float kSpeed;
+  static const float kFeetMargin;
+
+  bool left_landing_;
 };
 
 #endif /* CORE_ACTOR_RINA_H_ */

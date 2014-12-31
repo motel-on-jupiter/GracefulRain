@@ -79,6 +79,9 @@
     <Filter Include="src\core\scene\producution">
       <UniqueIdentifier>{dc9852e1-919f-4672-864f-13b350d31173}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\core\actor">
+      <UniqueIdentifier>{3ed32e65-56f3-4553-b4bf-4d64f90ffe13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cc">
@@ -260,6 +263,9 @@
     </ClCompile>
     <ClCompile Include="..\src\core\scene\production\ProductionScene.cc">
       <Filter>src\core\scene\producution</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\actor\Rina.cc">
+      <Filter>src\core\actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="..\src\core\scene\production\ProductionScene.h">
       <Filter>src\core\scene\producution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\actor\Rina.h">
+      <Filter>src\core\actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

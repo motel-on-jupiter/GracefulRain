@@ -5,6 +5,7 @@
 #define CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_
 
 #include <string>
+#include "core/actor/Rina.h"
 #include "core/scene/GracefulRainScene.h"
 #include "mojgame/auxiliary/coroutine_aux.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
@@ -31,11 +32,14 @@ class ProductionScene : public GracefulRainBaseScene {
                   const glm::vec2 &window_size);
 
  private:
+  void Direct();
+
   mojgame::RippleGLRenderer ripple_renderer_;
   mojgame::RainyRippleStimulator rainy_stimulator_;
   mojgame::GLTelopRenderer telop_renderer_;
   std::vector<mojgame::BaseRenderer *> renderer_stack_;
   void *ccr_param_;
+  Rina rina_;
 };
 
 #endif /* CORE_SCENE_PRODUCTION_CURTAINUPSCENE_H_ */

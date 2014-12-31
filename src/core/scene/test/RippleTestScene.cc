@@ -71,7 +71,7 @@ bool RippleTestScene::OnReaction(const SDL_MouseButtonEvent &button,
                                static_cast<float>(button.y)) / window_size;
       stimulus.pos.y = 1.0f - stimulus.pos.y;
       stimulus.effect = 1.0f;
-      renderer_.Stimulate(stimulus);
+      renderer_.Receive(stimulus);
     }
   }
   return true;
@@ -85,7 +85,7 @@ bool RippleTestScene::OnReaction(const SDL_MouseMotionEvent &motion,
                              static_cast<float>(motion.y)) / window_size;
     stimulus.pos.y = 1.0f - stimulus.pos.y;
     stimulus.effect = 1.0f;
-    renderer_.Stimulate(stimulus);
+    renderer_.Receive(stimulus);
   }
   return true;
 }
