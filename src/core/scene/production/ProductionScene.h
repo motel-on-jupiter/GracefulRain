@@ -35,6 +35,10 @@ class ProductionScene : public GracefulRainBaseScene {
                   const glm::vec2 &window_size);
 
  private:
+  enum { kNumPhantoms = 8 };
+  static const glm::vec2 kPhantomStartPoss[kNumPhantoms];
+  static const glm::vec2 kPhantomWalkDests[kNumPhantoms];
+
   void Direct();
 
   mojgame::RippleGLRenderer ripple_renderer_;
@@ -44,7 +48,9 @@ class ProductionScene : public GracefulRainBaseScene {
   void *ccr_param_;
   Rina rina_;
   Pablo pablo_;
-  Phantom phantoms_[8];
+  Phantom phantoms_[kNumPhantoms];
+  mojgame::RippleStimulus stimulus_;
+  float timer_;
 };
 
 #endif /* CORE_SCENE_PRODUCTION_PRODUCTIONSCENE_H_ */

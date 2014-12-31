@@ -21,7 +21,7 @@ class GracefulRainActor : public mojgame::PlanarActor {
   void Appear(const glm::vec2 &pos) {
     mojgame::PlanarActor::Appear(pos, 0.0f, glm::vec2());
   }
-  void Stimulate(mojgame::RippleGLRenderer &renderer);
+  bool Stimulate(mojgame::RippleGLRenderer &renderer);
 
  private:
   float step_length_;

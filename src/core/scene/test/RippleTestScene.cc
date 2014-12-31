@@ -43,12 +43,10 @@ bool RippleTestScene::OnStep(float elapsed_time) {
 bool RippleTestScene::OnReaction(const SDL_KeyboardEvent &keyboard) {
   if (keyboard.type == SDL_KEYDOWN) {
     if (keyboard.keysym.sym == SDLK_w) {
-      renderer_.Dettach();
       renderer_.Attach(walker_stimulator_);
       walker_stimulator_.set_move_forward(true);
     }
     if (keyboard.keysym.sym == SDLK_s) {
-      renderer_.Dettach();
       renderer_.Attach(walker_stimulator_);
       walker_stimulator_.set_move_forward(false);
     }

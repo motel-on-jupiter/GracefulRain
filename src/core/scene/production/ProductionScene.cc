@@ -14,6 +14,26 @@
 #include "mojgame/scene/Scene.h"
 
 const std::string ProductionScene::kName("Production");
+const glm::vec2 ProductionScene::kPhantomStartPoss[] = {
+  glm::vec2(0.45f, 0.0f),
+  glm::vec2(0.55f, 0.0f),
+  glm::vec2(0.0f, 0.45f),
+  glm::vec2(0.0f, 0.55f),
+  glm::vec2(0.45f, 1.0f),
+  glm::vec2(0.55f, 1.0f),
+  glm::vec2(1.0f, 0.45f),
+  glm::vec2(1.0f, 0.55f),
+};
+const glm::vec2 ProductionScene::kPhantomWalkDests[] = {
+  glm::vec2(0.45f, 0.4f),
+  glm::vec2(0.55f, 0.4f),
+  glm::vec2(0.4f, 0.45f),
+  glm::vec2(0.4f, 0.55f),
+  glm::vec2(0.45f, 0.6f),
+  glm::vec2(0.55f, 0.6f),
+  glm::vec2(0.6f, 0.45f),
+  glm::vec2(0.6f, 0.55f),
+};
 
 ProductionScene::ProductionScene(TwBar &tweak_bar)
     : GracefulRainBaseScene(kName.c_str(), nullptr, tweak_bar),
@@ -24,7 +44,9 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       ccr_param_(nullptr),
       rina_(),
       pablo_(),
-      phantoms_() {
+      phantoms_(),
+      stimulus_(),
+      timer_(0.0f) {
 }
 
 bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
@@ -42,7 +64,6 @@ void ProductionScene::OnFinal() {
   ccrAbort(ccr_param_);
   renderer_stack_.clear();
   telop_renderer_.Finalize();
-  ripple_renderer_.Dettach();
   ripple_renderer_.Finalize();
   return GracefulRainBaseScene::OnFinal();
 }
@@ -53,25 +74,30 @@ void ProductionScene::Direct() {
   ccrBeginContext;
   ccrEndContext(ctx);
   ccrBegin_(ctx);
-  while (time() < 2.0f) {
+  timer_ = 0.0f;
+  while (timer_ < 2.0f) {
     ccrReturnV;
   }
   telop_renderer_.Reset("Developed by The Motel on Jupiter", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
-  while (time() < 7.0f) {
+  timer_ = 0.0f;
+  while (timer_ < 4.0f) {
     ccrReturnV;
   }
   renderer_stack_.pop_back();
-  while (time() < 1.0f) {
+  timer_ = 0.0f;
+  while (timer_ < 0.1f) {
     ccrReturnV;
   }
   telop_renderer_.Reset("Lost In Rain", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
-  while (time() < 12.0f) {
+  timer_ = 0.0f;
+  while (timer_ < 4.0f) {
     ccrReturnV;
   }
   renderer_stack_.pop_back();
-  while (time() < 2.0f) {
+  timer_ = 0.0f;
+  while (timer_ < 2.0f) {
     ccrReturnV;
   }
   rina_.Appear(glm::vec2(1.0f, 0.0f));
@@ -84,31 +110,53 @@ void ProductionScene::Direct() {
   while (pablo_.walking()) {
     ccrReturnV;
   }
-  rina_.Appear(glm::vec2(1.0f, 0.0f));
+  rina_.Appear(glm::vec2(0.5f, 1.0f));
   rina_.Walk(glm::vec2(0.5f));
   while (rina_.walking()) {
     ccrReturnV;
   }
-  phantoms_[0].Appear(glm::vec2(0.45f, 0.0f));
-  phantoms_[0].Walk(glm::vec2(0.45f, 0.4f));
-  phantoms_[1].Appear(glm::vec2(0.55f, 0.0f));
-  phantoms_[1].Walk(glm::vec2(0.55f, 0.4f));
-  phantoms_[2].Appear(glm::vec2(0.0f, 0.45f));
-  phantoms_[2].Walk(glm::vec2(0.4f, 0.45f));
-  phantoms_[3].Appear(glm::vec2(0.0f, 0.55f));
-  phantoms_[3].Walk(glm::vec2(0.4f, 0.55f));
-  phantoms_[4].Appear(glm::vec2(0.45f, 1.0f));
-  phantoms_[4].Walk(glm::vec2(0.45f, 0.6f));
-  phantoms_[5].Appear(glm::vec2(0.55f, 1.0f));
-  phantoms_[5].Walk(glm::vec2(0.55f, 0.6f));
-  phantoms_[6].Appear(glm::vec2(1.0f, 0.45f));
-  phantoms_[6].Walk(glm::vec2(0.6f, 0.45f));
-  phantoms_[7].Appear(glm::vec2(1.0f, 0.55f));
-  phantoms_[7].Walk(glm::vec2(0.6f, 0.55f));
-  for (i=0; i<ARRAYSIZE(phantoms_); ++i) {
-    while (phantoms_[i].walking()) {
-      ccrReturnV;
+  for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
+    phantoms_[i].Appear(kPhantomStartPoss[i]);
+    phantoms_[i].Walk(kPhantomWalkDests[i]);
+  }
+  timer_ = 0.0f;
+  while (timer_ < 60.0f) {
+    for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
+      if (glm::length2(phantoms_[i].pos() - stimulus_.pos) < 0.1f * 0.1f) {
+        phantoms_[i].set_pos(kPhantomStartPoss[i]);
+      }
     }
+    for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
+      if (!phantoms_[i].walking()) {
+        telop_renderer_.Reset("Game Over", glm::vec2(0.5f));
+        renderer_stack_.push_back(&telop_renderer_);
+        while (true) {
+          ccrReturnV;
+        }
+      }
+    }
+    ccrReturnV;
+  }
+  for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
+    phantoms_[i].Disappear();
+  }
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
+    ccrReturnV;
+  }
+  pablo_.Appear(glm::vec2(0.55f, 1.0f));
+  pablo_.Walk(glm::vec2(0.55f, 0.5f));
+  while (pablo_.walking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
+    ccrReturnV;
+  }
+  rina_.Walk(glm::vec2(0.5f, 0.0f));
+  pablo_.Walk(glm::vec2(0.55f, 0.0f));
+  while (rina_.walking() || pablo_.walking()) {
+    ccrReturnV;
   }
   telop_renderer_.Reset("Fin", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
@@ -119,6 +167,7 @@ void ProductionScene::Direct() {
 }
 
 bool ProductionScene::OnStep(float elapsed_time) {
+  timer_ += elapsed_time;
   if (!finished()) {
     Direct();
   }
@@ -127,23 +176,36 @@ bool ProductionScene::OnStep(float elapsed_time) {
     return false;
   }
   if (rina_.walking()) {
-    rina_.Stimulate(ripple_renderer_);
+    if (!rina_.Stimulate(ripple_renderer_)) {
+      mojgame::LOGGER().Error("Failed for Rina to stimulate");
+      return false;
+    }
   }
   if (!pablo_.Step(elapsed_time)) {
     mojgame::LOGGER().Error("Failed to step Pablo");
     return false;
   }
   if (pablo_.walking()) {
-    pablo_.Stimulate(ripple_renderer_);
+    if (!pablo_.Stimulate(ripple_renderer_)) {
+      mojgame::LOGGER().Error("Failed for Pablo to stimulate");
+      return false;
+    }
   }
-  for (int i=0; i<ARRAYSIZE(phantoms_); ++i) {
+  for (int i = 0; i<ARRAYSIZE(phantoms_); ++i) {
     if (!phantoms_[i].Step(elapsed_time)) {
       mojgame::LOGGER().Error("Failed to step Phantom (idx: %d)", i);
       return false;
     }
     if (phantoms_[i].walking()) {
-      phantoms_[i].Stimulate(ripple_renderer_);
+      if (!phantoms_[i].Stimulate(ripple_renderer_)) {
+        mojgame::LOGGER().Error("Failed for Phantom to stimulate (idx: %d)", i);
+        return false;
+      }
     }
+  }
+  if (stimulus_.effect > 0.0f) {
+    ripple_renderer_.Receive(stimulus_);
+    stimulus_.effect = 0.0f;
   }
   return true;
 }
@@ -161,12 +223,11 @@ bool ProductionScene::OnReaction(const SDL_MouseButtonEvent &button,
                                  const glm::vec2 &window_size) {
   if (button.button == 1) {
     if (button.type == SDL_MOUSEBUTTONDOWN) {
-      mojgame::RippleStimulus stimulus;
-      stimulus.pos = glm::vec2(static_cast<float>(button.x),
+      glm::vec2 pos = glm::vec2(static_cast<float>(button.x),
                                static_cast<float>(button.y)) / window_size;
-      stimulus.pos.y = 1.0f - stimulus.pos.y;
-      stimulus.effect = 1.0f;
-      ripple_renderer_.Receive(stimulus);
+      pos.y = 1.0f - pos.y;
+      stimulus_.pos = pos + glm::diskRand(0.1f);
+      stimulus_.effect = 1.0f;
     }
   }
   return true;
@@ -175,12 +236,11 @@ bool ProductionScene::OnReaction(const SDL_MouseButtonEvent &button,
 bool ProductionScene::OnReaction(const SDL_MouseMotionEvent &motion,
                                  const glm::vec2 &window_size) {
   if (motion.state == SDL_PRESSED) {
-    mojgame::RippleStimulus stimulus;
-    stimulus.pos = glm::vec2(static_cast<float>(motion.x),
+    glm::vec2 pos = glm::vec2(static_cast<float>(motion.x),
                              static_cast<float>(motion.y)) / window_size;
-    stimulus.pos.y = 1.0f - stimulus.pos.y;
-    stimulus.effect = 1.0f;
-    ripple_renderer_.Receive(stimulus);
+    pos.y = 1.0f - pos.y;
+    stimulus_.pos = pos + glm::diskRand(0.1f);
+    stimulus_.effect = 1.0f;
   }
   return true;
 }
