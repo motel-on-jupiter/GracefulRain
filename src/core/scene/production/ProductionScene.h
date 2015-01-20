@@ -36,9 +36,16 @@ class ProductionScene : public GracefulRainBaseScene {
 
  private:
   enum { kNumPhantoms = 8 };
-  static const glm::vec2 kPhantomStartPoss[kNumPhantoms];
-  static const glm::vec2 kPhantomWalkDests[kNumPhantoms];
+  static const glm::vec2 kPhantomInitialAppearingPoss[4];
+  static const glm::vec3 kRainStimulusColor;
+  static const glm::vec2 kRainStimulusEffectRange;
+  static const glm::vec3 kMouseStimulusColor;
+  static const float kMouseStimulusEffect;
+  static const float kBattleTime;
+  static const float kBattleTimeToStartHardBattle;
+  static const float kMaxEscapeDistance;
 
+  void RandomizeAppearingPositionForPhantom(glm::vec2 &appearing_pos);
   void Direct();
 
   mojgame::RippleGLRenderer ripple_renderer_;
@@ -51,6 +58,7 @@ class ProductionScene : public GracefulRainBaseScene {
   Phantom phantoms_[kNumPhantoms];
   mojgame::RippleStimulus stimulus_;
   float timer_;
+  float rina_escape_timer_;
 };
 
 #endif /* CORE_SCENE_PRODUCTION_PRODUCTIONSCENE_H_ */

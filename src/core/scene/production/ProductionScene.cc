@@ -11,34 +11,32 @@
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/includer/gl_include.h"
 #include "mojgame/includer/glm_include.h"
+#include "mojgame/sampler/color_sample.h"
 #include "mojgame/scene/Scene.h"
 
 const std::string ProductionScene::kName("Production");
-const glm::vec2 ProductionScene::kPhantomStartPoss[] = {
+
+const glm::vec2 ProductionScene::kPhantomInitialAppearingPoss[] = {
   glm::vec2(0.45f, 0.0f),
   glm::vec2(0.55f, 0.0f),
-  glm::vec2(0.0f, 0.45f),
-  glm::vec2(0.0f, 0.55f),
   glm::vec2(0.45f, 1.0f),
   glm::vec2(0.55f, 1.0f),
-  glm::vec2(1.0f, 0.45f),
-  glm::vec2(1.0f, 0.55f),
-};
-const glm::vec2 ProductionScene::kPhantomWalkDests[] = {
-  glm::vec2(0.45f, 0.4f),
-  glm::vec2(0.55f, 0.4f),
-  glm::vec2(0.4f, 0.45f),
-  glm::vec2(0.4f, 0.55f),
-  glm::vec2(0.45f, 0.6f),
-  glm::vec2(0.55f, 0.6f),
-  glm::vec2(0.6f, 0.45f),
-  glm::vec2(0.6f, 0.55f),
 };
 
+const glm::vec3 ProductionScene::kRainStimulusColor(1.0f);
+const glm::vec2 ProductionScene::kRainStimulusEffectRange(0.3f, 0.7f);
+
+const glm::vec3 ProductionScene::kMouseStimulusColor(1.0f, 0.0f, 0.9f);
+const float ProductionScene::kMouseStimulusEffect = 1.0f;
+
+const float ProductionScene::kBattleTime = 90.0f;
+const float ProductionScene::kBattleTimeToStartHardBattle = 60.0f;
+const float ProductionScene::kMaxEscapeDistance = 0.15f;
+
 ProductionScene::ProductionScene(TwBar &tweak_bar)
-    : GracefulRainBaseScene(kName.c_str(), nullptr, tweak_bar),
+    : GracefulRainBaseScene(kName.c_str(), tweak_bar),
       ripple_renderer_(),
-      rainy_stimulator_(),
+      rainy_stimulator_(kRainStimulusColor, kRainStimulusEffectRange),
       telop_renderer_(),
       renderer_stack_(),
       ccr_param_(nullptr),
@@ -46,17 +44,20 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       pablo_(),
       phantoms_(),
       stimulus_(),
-      timer_(0.0f) {
+      timer_(0.0f),
+      rina_escape_timer_(0.0f) {
 }
 
 bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
-  if (!GracefulRainBaseScene::OnInitial(window_size)) {
+  if (!ripple_renderer_.Initialize(window_size)) {
+    mojgame::LOGGER().Error("Failed to initialize ripple renderer");
     return false;
   }
-  ripple_renderer_.Initialize(window_size);
   ripple_renderer_.Attach(rainy_stimulator_);
-  renderer_stack_.push_back(&ripple_renderer_);
-  telop_renderer_.Initialize(window_size);
+  if (!telop_renderer_.Initialize()) {
+    mojgame::LOGGER().Error("Failed to initialize telop renderer");
+    return false;
+  }
   return true;
 }
 
@@ -64,16 +65,36 @@ void ProductionScene::OnFinal() {
   ccrAbort(ccr_param_);
   renderer_stack_.clear();
   telop_renderer_.Finalize();
+  ripple_renderer_.DettachAll();
   ripple_renderer_.Finalize();
-  return GracefulRainBaseScene::OnFinal();
+}
+
+void ProductionScene::RandomizeAppearingPositionForPhantom(glm::vec2 &appearing_pos) {
+  float end = glm::linearRand(0.0f, 4.0f);
+  if (end < 1.0f) {
+    appearing_pos.x = 0.0f;
+    appearing_pos.y = glm::linearRand(0.0f, 1.0f);
+  } else if (end < 2.0f) {
+    appearing_pos.x = 1.0f;
+    appearing_pos.y = glm::linearRand(0.0f, 1.0f);
+  } else if (end  < 3.0f) {
+    appearing_pos.x = glm::linearRand(0.0f, 1.0f);
+    appearing_pos.y = 1.0f;
+  } else {
+    appearing_pos.x = glm::linearRand(0.0f, 1.0f);
+    appearing_pos.y = 0.0f;
+  }
 }
 
 void ProductionScene::Direct() {
   int i = 0;
+  int j = 0;
+  glm::vec2 escape_pos;
   ccrAsContParam(ccr_param_);
   ccrBeginContext;
   ccrEndContext(ctx);
   ccrBegin_(ctx);
+  renderer_stack_.push_back(&ripple_renderer_);
   timer_ = 0.0f;
   while (timer_ < 2.0f) {
     ccrReturnV;
@@ -89,7 +110,7 @@ void ProductionScene::Direct() {
   while (timer_ < 0.1f) {
     ccrReturnV;
   }
-  telop_renderer_.Reset("Lost In Rain", glm::vec2(0.5f));
+  telop_renderer_.Reset("- Lost in Rain -", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
   timer_ = 0.0f;
   while (timer_ < 4.0f) {
@@ -100,34 +121,135 @@ void ProductionScene::Direct() {
   while (timer_ < 2.0f) {
     ccrReturnV;
   }
-  rina_.Appear(glm::vec2(1.0f, 0.0f));
-  rina_.Walk(glm::vec2(0.0f, 1.0f));
-  while (rina_.walking()) {
+  rina_.Appear(glm::vec2(0.5f, 0.0f));
+  rina_.Walk(glm::vec2(0.5f, 0.5f));
+  while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  pablo_.Appear(glm::vec2(1.0f, 0.0f));
-  pablo_.Walk(glm::vec2(0.0f, 1.0f));
-  while (pablo_.walking()) {
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
+    ccrReturnV;
+  }
+  rina_.Hop();
+  timer_ = 0.0f;
+  while (timer_ < 0.5f) {
+    ccrReturnV;
+  }
+  rina_.Hop();
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
+    ccrReturnV;
+  }
+  rina_.Walk(glm::vec2(0.5f, 1.0f));
+  while (rina_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 0.5f) {
+    ccrReturnV;
+  }
+  pablo_.Appear(glm::vec2(0.5f, 0.0f));
+  pablo_.Walk(glm::vec2(0.5f, 0.5f));
+  while (pablo_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
+    ccrReturnV;
+  }
+  pablo_.Walk(glm::vec2(0.4f, 0.5f));
+  while (pablo_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
+    ccrReturnV;
+  }
+  pablo_.Walk(glm::vec2(0.6f, 0.5f));
+  while (pablo_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 2.0f) {
+    ccrReturnV;
+  }
+  pablo_.Walk(glm::vec2(0.6f, 1.0f));
+  while (pablo_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
     ccrReturnV;
   }
   rina_.Appear(glm::vec2(0.5f, 1.0f));
-  rina_.Walk(glm::vec2(0.5f));
-  while (rina_.walking()) {
+  rina_.Walk(glm::vec2(0.5f, 0.4f));
+  while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
-    phantoms_[i].Appear(kPhantomStartPoss[i]);
-    phantoms_[i].Walk(kPhantomWalkDests[i]);
+  timer_ = 0.0f;
+  while (timer_ < 1.5f) {
+    ccrReturnV;
+  }
+  for (i = 0; i < 2; ++i) {
+    phantoms_[i].Appear(kPhantomInitialAppearingPoss[i]);
+    phantoms_[i].Walk(rina_);
+  }
+  rina_.Walk(glm::vec2(0.5f, 0.6f));
+  while (rina_.IsWalking()) {
+    ccrReturnV;
   }
   timer_ = 0.0f;
-  while (timer_ < 60.0f) {
-    for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
-      if (glm::length2(phantoms_[i].pos() - stimulus_.pos) < 0.1f * 0.1f) {
-        phantoms_[i].set_pos(kPhantomStartPoss[i]);
+  while (timer_ < 1.5f) {
+    ccrReturnV;
+  }
+  for (i = 2; i < 4; ++i) {
+    phantoms_[i].Appear(kPhantomInitialAppearingPoss[i]);
+    phantoms_[i].Walk(rina_);
+  }
+  rina_.Walk(glm::vec2(0.5f, 0.5f));
+  while (rina_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  rina_escape_timer_ = 0.0f;
+  for (i = 4; i < ARRAYSIZE(phantoms_); ++i) {
+      glm::vec2 appearing_pos;
+      RandomizeAppearingPositionForPhantom(appearing_pos);
+      phantoms_[i].Appear(appearing_pos);
+      phantoms_[i].Walk(rina_);
+  }
+  while (timer_ < kBattleTime) {
+    if (stimulus_.effect > 0.0f) {
+      for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
+        if (glm::length2(phantoms_[i].pos() - stimulus_.pos) < 0.1f * 0.1f) {
+          phantoms_[i].ReceiveDamage();
+          if (phantoms_[i].IsDead()) {
+            glm::vec2 appearing_pos;
+            RandomizeAppearingPositionForPhantom(appearing_pos);
+            phantoms_[i].Revive(timer_ >= kBattleTimeToStartHardBattle, appearing_pos);
+          }
+        }
       }
     }
     for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
-      if (!phantoms_[i].walking()) {
+      escape_pos += phantoms_[i].pos() / static_cast<float>(ARRAYSIZE(phantoms_));
+      if (glm::distance(escape_pos, glm::vec2(0.5f)) > kMaxEscapeDistance) {
+        escape_pos = glm::vec2(0.5f) + (escape_pos - glm::vec2(0.5f)) * kMaxEscapeDistance;
+      }
+    }
+    if (rina_.IsWalking()) {
+      rina_escape_timer_ = 0.0f;
+    } else {
+      if (rina_escape_timer_ > 2.5f) {
+        rina_escape_timer_ = 0.0f;
+        rina_.Walk(escape_pos);
+      }
+    }
+    for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
+      if (!phantoms_[i].IsWalking()) {
+        for (j = 0; j<ARRAYSIZE(phantoms_); ++j) {
+          phantoms_[j].Stop();
+        }
         telop_renderer_.Reset("Game Over", glm::vec2(0.5f));
         renderer_stack_.push_back(&telop_renderer_);
         while (true) {
@@ -138,24 +260,114 @@ void ProductionScene::Direct() {
     ccrReturnV;
   }
   for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
+    phantoms_[i].Stop();
+  }
+  timer_ = 0.0f;
+  while (timer_ < 5.0f) {
+    rainy_stimulator_.set_effect_range(kRainStimulusEffectRange * (1.0f - timer_ / 5.0f));
+    ccrReturnV;
+  }
+  rainy_stimulator_.set_effect_range(kRainStimulusEffectRange * 0.0f);
+  for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
     phantoms_[i].Disappear();
   }
+  ripple_renderer_.DettachAll();
   timer_ = 0.0f;
   while (timer_ < 1.0f) {
     ccrReturnV;
   }
   pablo_.Appear(glm::vec2(0.55f, 1.0f));
-  pablo_.Walk(glm::vec2(0.55f, 0.5f));
-  while (pablo_.walking()) {
+  pablo_.Walk(glm::vec2(0.55f, 0.55f));
+  timer_ = 0.0f;
+  while (timer_ < 2.0f) {
+    ccrReturnV;
+  }
+  rina_.Hop();
+  timer_ = 0.0f;
+  while (timer_ < 0.5f) {
+    ccrReturnV;
+  }
+  rina_.Hop();
+  timer_ = 0.0f;
+  while (timer_ < 1.0f) {
+    ccrReturnV;
+  }
+  rina_.Walk(glm::vec2(0.5f, 0.5f));
+  while (rina_.IsWalking() || pablo_.IsWalking()) {
     ccrReturnV;
   }
   timer_ = 0.0f;
   while (timer_ < 1.0f) {
     ccrReturnV;
   }
-  rina_.Walk(glm::vec2(0.5f, 0.0f));
+  rina_.Walk(glm::vec2(0.5f, 0.03f));
+  pablo_.Walk(glm::vec2(0.55f, 0.2f));
+  while (pablo_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 1.5f) {
+    ccrReturnV;
+  }
+  pablo_.Walk(glm::vec2(0.55f, 0.425f));
+  while (pablo_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 3.0f) {
+    ccrReturnV;
+  }
+  rina_.Walk(glm::vec2(0.5f, 0.3f));
+  while (rina_.IsWalking()) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 2.0f) {
+    ccrReturnV;
+  }
+  rina_.Hop();
+  timer_ = 0.0f;
+  while (timer_ < 0.5f) {
+    ccrReturnV;
+  }
+  rina_.Hop();
+  timer_ = 0.0f;
+  while (timer_ < 1.5f) {
+    ccrReturnV;
+  }
+  rina_.Stamp();
+  timer_ = 0.0f;
+  while (timer_ < 0.25f) {
+    ccrReturnV;
+  }
+  rina_.Stamp();
+  timer_ = 0.0f;
+  while (timer_ < 0.25f) {
+    ccrReturnV;
+  }
+  rina_.Stamp();
+  timer_ = 0.0f;
+  while (timer_ < 0.25f) {
+    ccrReturnV;
+  }
+  rina_.Stamp();
+  timer_ = 0.0f;
+  while (timer_ < 0.25f) {
+    ccrReturnV;
+  }
+  rina_.Stamp();
+  timer_ = 0.0f;
+  while (timer_ < 2.0f) {
+    ccrReturnV;
+  }
   pablo_.Walk(glm::vec2(0.55f, 0.0f));
-  while (rina_.walking() || pablo_.walking()) {
+  timer_ = 0.0f;
+  while (timer_ < 1.5f) {
+    ccrReturnV;
+  }
+  rina_.Walk(glm::vec2(0.5f, 0.0f));
+  timer_ = 0.0f;
+  while (timer_ < 1.5f) {
     ccrReturnV;
   }
   telop_renderer_.Reset("Fin", glm::vec2(0.5f));
@@ -168,6 +380,7 @@ void ProductionScene::Direct() {
 
 bool ProductionScene::OnStep(float elapsed_time) {
   timer_ += elapsed_time;
+  rina_escape_timer_ += elapsed_time;
   if (!finished()) {
     Direct();
   }
@@ -175,32 +388,26 @@ bool ProductionScene::OnStep(float elapsed_time) {
     mojgame::LOGGER().Error("Failed to step Rina");
     return false;
   }
-  if (rina_.walking()) {
-    if (!rina_.Stimulate(ripple_renderer_)) {
-      mojgame::LOGGER().Error("Failed for Rina to stimulate");
-      return false;
-    }
+  if (!rina_.Stimulate(ripple_renderer_)) {
+    mojgame::LOGGER().Error("Failed for Rina to stimulate");
+    return false;
   }
   if (!pablo_.Step(elapsed_time)) {
     mojgame::LOGGER().Error("Failed to step Pablo");
     return false;
   }
-  if (pablo_.walking()) {
-    if (!pablo_.Stimulate(ripple_renderer_)) {
-      mojgame::LOGGER().Error("Failed for Pablo to stimulate");
-      return false;
-    }
+  if (!pablo_.Stimulate(ripple_renderer_)) {
+    mojgame::LOGGER().Error("Failed for Pablo to stimulate");
+    return false;
   }
   for (int i = 0; i<ARRAYSIZE(phantoms_); ++i) {
     if (!phantoms_[i].Step(elapsed_time)) {
       mojgame::LOGGER().Error("Failed to step Phantom (idx: %d)", i);
       return false;
     }
-    if (phantoms_[i].walking()) {
-      if (!phantoms_[i].Stimulate(ripple_renderer_)) {
-        mojgame::LOGGER().Error("Failed for Phantom to stimulate (idx: %d)", i);
-        return false;
-      }
+    if (!phantoms_[i].Stimulate(ripple_renderer_)) {
+      mojgame::LOGGER().Error("Failed for Phantom to stimulate (idx: %d)", i);
+      return false;
     }
   }
   if (stimulus_.effect > 0.0f) {
@@ -227,7 +434,8 @@ bool ProductionScene::OnReaction(const SDL_MouseButtonEvent &button,
                                static_cast<float>(button.y)) / window_size;
       pos.y = 1.0f - pos.y;
       stimulus_.pos = pos + glm::diskRand(0.1f);
-      stimulus_.effect = 1.0f;
+      stimulus_.color = kMouseStimulusColor;
+      stimulus_.effect = kMouseStimulusEffect;
     }
   }
   return true;
@@ -240,7 +448,8 @@ bool ProductionScene::OnReaction(const SDL_MouseMotionEvent &motion,
                              static_cast<float>(motion.y)) / window_size;
     pos.y = 1.0f - pos.y;
     stimulus_.pos = pos + glm::diskRand(0.1f);
-    stimulus_.effect = 1.0f;
+    stimulus_.color = kMouseStimulusColor;
+    stimulus_.effect = kMouseStimulusEffect;
   }
   return true;
 }

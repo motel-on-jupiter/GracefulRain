@@ -15,7 +15,7 @@ class TestSelectorScene : public GracefulRainBaseScene,
   static const std::string kName;
 
   TestSelectorScene(mojgame::SceneGraph &graph, TwBar &tweak_bar)
-      : GracefulRainBaseScene(kName.c_str(), nullptr, tweak_bar),
+      : GracefulRainBaseScene(kName.c_str(), tweak_bar),
         graph_(graph),
         scenes_(),
         cursor_(0),

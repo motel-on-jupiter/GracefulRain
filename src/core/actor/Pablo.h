@@ -10,13 +10,16 @@
 class Pablo : public GracefulRainActor {
  public:
   Pablo()
-      : GracefulRainActor(kSpeed, kStepLength, kFeetMargin) {
+      : GracefulRainActor(kSpeed, kStepLength, kFeetMargin, kStimulusColor,
+                          kStimulusEffect) {
   }
 
  private:
   static const float kSpeed;
   static const float kStepLength;
   static const float kFeetMargin;
+  static const glm::vec3 kStimulusColor;
+  static const float kStimulusEffect;
 };
 
 #endif /* CORE_ACTOR_PABLO_H_ */

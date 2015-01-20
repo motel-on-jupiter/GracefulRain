@@ -114,7 +114,7 @@ int GracefulRainApp::Run() {
     return -1;
   }
   mojgame::atb_aux::DefineMenu(kTweakBarPosition, kTweakBarWidth,
-                               kTweakBarHeight, kTweakBarColor);
+                               kTweakBarHeight, kTweakBarColor, "iconified='true'");
   mojgame::atb_aux::AddInt32VarRO(*tweak_bar_, "System", "Actual Frame Rate",
                                   tweaker_ctx.system_actual_fps);
   mojgame::atb_aux::AddFloatVarRW(*tweak_bar_, "System", "Time Speed",

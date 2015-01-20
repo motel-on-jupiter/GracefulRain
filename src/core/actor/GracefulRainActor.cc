@@ -8,26 +8,58 @@
 
 bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
   if (appeared()) {
-    step_count_ += glm::length(pos() - step_pos_);
-    step_pos_ = pos();
-    if (step_count_ < step_length_) {
-      return true;
-    }
-    while (step_count_ > step_length_ && step_length_ > 0.0f) {
-      step_count_ -= step_length_;
-    }
-    mojgame::RippleStimulus stimulus;
-    glm::vec2 margin = glm::vec2(0.0f, feet_margin_ * 0.5f);
-    if (left_landing_) {
+    if (IsWalking()) {
+      step_count_ += glm::length(pos() - step_pos_);
+      step_pos_ = pos();
+      if (step_count_ < step_length_) {
+        return true;
+      }
+      while (step_count_ > step_length_ && step_length_ > 0.0f) {
+        step_count_ -= step_length_;
+      }
+      glm::vec2 margin = glm::vec2(0.0f, feet_margin_ * 0.5f);
+      if (left_landing_) {
+        margin.y *= -1.0f;
+      }
+      margin = glm::rotate(margin, rot());
+      left_landing_ = !left_landing_;
+      mojgame::RippleStimulus stimulus(pos() + margin, stimulus_color_, stimulus_effect_);
+      if (!renderer.Receive(stimulus)) {
+        mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
+        return false;
+      }
+    } else if (walk_finished_ || stamp_) {
+      if (stamp_) {
+        stamp_ = false;
+      }
+      step_count_ = 0.0f;
+      walk_finished_ = false;
+      glm::vec2 margin = glm::vec2(0.0f, feet_margin_ * 0.5f);
+      if (left_landing_) {
+        margin.y *= -1.0f;
+      }
+      margin = glm::rotate(margin, rot());
+      left_landing_ = !left_landing_;
+      mojgame::RippleStimulus stimulus(pos() + margin, stimulus_color_, stimulus_effect_);
+      if (!renderer.Receive(stimulus)) {
+        mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
+        return false;
+      }
+    } else if (hop_) {
+      hop_ = false;
+      glm::vec2 margin = glm::vec2(0.0f, feet_margin_ * 0.7f);
+      mojgame::RippleStimulus stimulus(pos() + glm::rotate(margin, rot()),
+                                       stimulus_color_, stimulus_effect_);
+      if (!renderer.Receive(stimulus)) {
+        mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
+        return false;
+      }
       margin.y *= -1.0f;
-    }
-    margin = glm::rotate(margin, rot());
-    left_landing_ = !left_landing_;
-    stimulus.pos = pos() + margin;
-    stimulus.effect = 1.0f;
-    if (!renderer.Receive(stimulus)) {
-      mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
-      return false;
+      stimulus.pos = pos() + glm::rotate(margin, rot());
+      if (!renderer.Receive(stimulus)) {
+        mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
+        return false;
+      }
     }
   }
   return true;

@@ -12,14 +12,13 @@
 #include "mojgame/scene/Scene.h"
 
 class GracefulRainBaseScene :
-    public mojgame::RendererAttachableScene,
+    public mojgame::BaseScene,
     public mojgame::sdl_aux::KeyboardEventListenerInterface,
     public mojgame::sdl_aux::MouseEventListenerInterface,
     public mojgame::NonCopyable<GracefulRainBaseScene> {
  public:
-  GracefulRainBaseScene(const char *name, mojgame::BaseRenderer *renderer,
-                        TwBar &tweak_bar)
-      : mojgame::RendererAttachableScene(name, renderer),
+  GracefulRainBaseScene(const char *name, TwBar &tweak_bar)
+      : mojgame::BaseScene(name),
         tweak_bar_(tweak_bar) {
   }
   virtual ~GracefulRainBaseScene() {

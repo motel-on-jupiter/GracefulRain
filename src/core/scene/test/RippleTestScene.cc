@@ -19,45 +19,31 @@ RippleTestSceneRenderer::RippleTestSceneRenderer()
 const std::string RippleTestScene::kName("Ripple Test");
 
 RippleTestScene::RippleTestScene(TwBar &tweak_bar)
-    : GracefulRainBaseScene(kName.c_str(), &renderer_, tweak_bar),
+    : GracefulRainBaseScene(kName.c_str(), tweak_bar),
       renderer_(),
-      rainy_stimulator_(),
-      walker_stimulator_() {
+      rainy_stimulator_(glm::vec3(1.0f), glm::vec2(0.0f, 1.0f)) {
 }
 
 bool RippleTestScene::OnInitial(const glm::vec2 &window_size) {
-  if (!GracefulRainBaseScene::OnInitial(window_size)) {
+  if (!renderer_.Initialize(window_size)) {
     return false;
   }
   renderer_.Attach(rainy_stimulator_);
-  walker_stimulator_.Reset(window_size * 0.5f, 0.0f, 8.0f, 2.0f);
   return true;
+}
+
+void RippleTestScene::OnFinal() {
+  renderer_.DettachAll();
+  renderer_.Finalize();
 }
 
 bool RippleTestScene::OnStep(float elapsed_time) {
   UNUSED(elapsed_time);
-
   return true;
 }
 
-bool RippleTestScene::OnReaction(const SDL_KeyboardEvent &keyboard) {
-  if (keyboard.type == SDL_KEYDOWN) {
-    if (keyboard.keysym.sym == SDLK_w) {
-      renderer_.Attach(walker_stimulator_);
-      walker_stimulator_.set_move_forward(true);
-    }
-    if (keyboard.keysym.sym == SDLK_s) {
-      renderer_.Attach(walker_stimulator_);
-      walker_stimulator_.set_move_forward(false);
-    }
-    if (keyboard.keysym.sym == SDLK_d) {
-      walker_stimulator_.Rotate(-0.2f);
-    }
-    if (keyboard.keysym.sym == SDLK_a) {
-      walker_stimulator_.Rotate(0.2f);
-    }
-  }
-  return true;
+bool RippleTestScene::OnRendering(const glm::vec2 &window_size) {
+  return renderer_.Render(window_size);
 }
 
 bool RippleTestScene::OnReaction(const SDL_MouseButtonEvent &button,
@@ -68,6 +54,7 @@ bool RippleTestScene::OnReaction(const SDL_MouseButtonEvent &button,
       stimulus.pos = glm::vec2(static_cast<float>(button.x),
                                static_cast<float>(button.y)) / window_size;
       stimulus.pos.y = 1.0f - stimulus.pos.y;
+      stimulus.color = glm::vec3(1.0f, 0.0f, 0.0f);
       stimulus.effect = 1.0f;
       renderer_.Receive(stimulus);
     }
@@ -82,6 +69,7 @@ bool RippleTestScene::OnReaction(const SDL_MouseMotionEvent &motion,
     stimulus.pos = glm::vec2(static_cast<float>(motion.x),
                              static_cast<float>(motion.y)) / window_size;
     stimulus.pos.y = 1.0f - stimulus.pos.y;
+    stimulus.color = glm::vec3(1.0f, 0.0f, 0.0f);
     stimulus.effect = 1.0f;
     renderer_.Receive(stimulus);
   }

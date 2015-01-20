@@ -22,22 +22,22 @@ class RippleTestScene : public GracefulRainBaseScene {
   static const std::string kName;
 
   explicit RippleTestScene(TwBar &tweak_bar);
-  virtual ~RippleTestScene() {
+  ~RippleTestScene() {
   }
 
  protected:
-  virtual bool OnInitial(const glm::vec2 &window_size);
-  virtual bool OnStep(float elapsed_time);
-  virtual bool OnReaction(const SDL_KeyboardEvent &keyboard);
-  virtual bool OnReaction(const SDL_MouseButtonEvent &button,
-                          const glm::vec2 &window_size);
-  virtual bool OnReaction(const SDL_MouseMotionEvent &motion,
-                          const glm::vec2 &window_size);
+  bool OnInitial(const glm::vec2 &window_size);
+  void OnFinal();
+  bool OnStep(float elapsed_time);
+  bool OnRendering(const glm::vec2 &window_size);
+  bool OnReaction(const SDL_MouseButtonEvent &button,
+                  const glm::vec2 &window_size);
+  bool OnReaction(const SDL_MouseMotionEvent &motion,
+                  const glm::vec2 &window_size);
 
  private:
   RippleTestSceneRenderer renderer_;
   mojgame::RainyRippleStimulator rainy_stimulator_;
-  mojgame::WalkerRippleStimulator walker_stimulator_;
 };
 
 #endif /* CORE_SCENE_TEST_RIPPLETESTSCENE_H_ */
