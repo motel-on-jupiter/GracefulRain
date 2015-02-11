@@ -10,6 +10,7 @@
 #include "core/actor/Phantom.h"
 #include "core/actor/Rina.h"
 #include "core/scene/GracefulRainScene.h"
+#include "mojgame/audio/BgmPlayer.h"
 #include "mojgame/auxiliary/coroutine_aux.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
 #include "mojgame/catalogue/renderer/TelopRenderer.h"
@@ -42,6 +43,7 @@ class ProductionScene : public GracefulRainBaseScene {
   static const glm::vec3 kMouseStimulusColor;
   static const float kMouseStimulusEffect;
   static const float kBattleTime;
+  static const float kBattleTimeToStartSeriousBattle;
   static const float kBattleTimeToStartHardBattle;
   static const float kMaxEscapeDistance;
 
@@ -52,6 +54,9 @@ class ProductionScene : public GracefulRainBaseScene {
   mojgame::RainyRippleStimulator rainy_stimulator_;
   mojgame::GLTelopRenderer telop_renderer_;
   std::vector<mojgame::BaseRenderer *> renderer_stack_;
+  mojgame::AlureBgm rain_bgm_;
+  mojgame::AlureBgm thunder_bgm_;
+  mojgame::AlureBgm forest_bgm_;
   void *ccr_param_;
   Rina rina_;
   Pablo pablo_;
@@ -59,6 +64,7 @@ class ProductionScene : public GracefulRainBaseScene {
   mojgame::RippleStimulus stimulus_;
   float timer_;
   float rina_escape_timer_;
+  bool thunder_bgm_playing_;
 };
 
 #endif /* CORE_SCENE_PRODUCTION_PRODUCTIONSCENE_H_ */

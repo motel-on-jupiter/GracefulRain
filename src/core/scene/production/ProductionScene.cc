@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "core/scene/GracefulRainScene.h"
+#include "mojgame/audio/BgmPlayer.h"
 #include "mojgame/auxiliary/coroutine_aux.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
@@ -29,7 +30,8 @@ const glm::vec2 ProductionScene::kRainStimulusEffectRange(0.3f, 0.7f);
 const glm::vec3 ProductionScene::kMouseStimulusColor(1.0f, 0.0f, 0.9f);
 const float ProductionScene::kMouseStimulusEffect = 1.0f;
 
-const float ProductionScene::kBattleTime = 90.0f;
+const float ProductionScene::kBattleTime = 120.0f;
+const float ProductionScene::kBattleTimeToStartSeriousBattle = 30.0f;
 const float ProductionScene::kBattleTimeToStartHardBattle = 60.0f;
 const float ProductionScene::kMaxEscapeDistance = 0.15f;
 
@@ -39,13 +41,17 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       rainy_stimulator_(kRainStimulusColor, kRainStimulusEffectRange),
       telop_renderer_(),
       renderer_stack_(),
+      rain_bgm_("audio/rain.wav"),
+      thunder_bgm_("audio/thunder.wav"),
+      forest_bgm_("audio/forest.wav"),
       ccr_param_(nullptr),
       rina_(),
       pablo_(),
       phantoms_(),
       stimulus_(),
       timer_(0.0f),
-      rina_escape_timer_(0.0f) {
+      rina_escape_timer_(0.0f),
+      thunder_bgm_playing_(false) {
 }
 
 bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
@@ -56,6 +62,28 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
   ripple_renderer_.Attach(rainy_stimulator_);
   if (!telop_renderer_.Initialize()) {
     mojgame::LOGGER().Error("Failed to initialize telop renderer");
+    ripple_renderer_.Finalize();
+    return false;
+  }
+  if (!rain_bgm_.Initialize(1.0f, 0.3f)) {
+    mojgame::LOGGER().Error("Failed to initialize rain ambient bgm");
+    telop_renderer_.Finalize();
+    ripple_renderer_.Finalize();
+    return false;
+  }
+  if (!thunder_bgm_.Initialize(1.0f, 1.0f)) {
+    mojgame::LOGGER().Error("Failed to initialize thunder ambient bgm");
+    rain_bgm_.Finalize();
+    telop_renderer_.Finalize();
+    ripple_renderer_.Finalize();
+    return false;
+  }
+  if (!forest_bgm_.Initialize(1.0f, 0.3f)) {
+    mojgame::LOGGER().Error("Failed to initialize forest ambient bgm");
+    thunder_bgm_.Finalize();
+    rain_bgm_.Finalize();
+    telop_renderer_.Finalize();
+    ripple_renderer_.Finalize();
     return false;
   }
   return true;
@@ -63,6 +91,9 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
 
 void ProductionScene::OnFinal() {
   ccrAbort(ccr_param_);
+  forest_bgm_.Finalize();
+  thunder_bgm_.Finalize();
+  rain_bgm_.Finalize();
   renderer_stack_.clear();
   telop_renderer_.Finalize();
   ripple_renderer_.DettachAll();
@@ -94,6 +125,9 @@ void ProductionScene::Direct() {
   ccrBeginContext;
   ccrEndContext(ctx);
   ccrBegin_(ctx);
+  if (!mojgame::AlureBgmPlayer::Play(rain_bgm_, -1)) {
+    mojgame::LOGGER().Error("Failed to play rain ambient bgm");
+  }
   renderer_stack_.push_back(&ripple_renderer_);
   timer_ = 0.0f;
   while (timer_ < 2.0f) {
@@ -219,6 +253,26 @@ void ProductionScene::Direct() {
       phantoms_[i].Walk(rina_);
   }
   while (timer_ < kBattleTime) {
+    if (thunder_bgm_playing_) {
+      float thunder_time = timer_ - kBattleTimeToStartHardBattle;
+      while (thunder_time > 30.0f) {
+        thunder_time -= 30.0f;
+      }
+      if (thunder_time > 0.95f && thunder_time < 1.35f) {
+        ripple_renderer_.set_whiteout(0.9f);
+      } else if (thunder_time > 1.35f && thunder_time < 1.40f) {
+        ripple_renderer_.set_whiteout((1.0f - mojgame::math_aux::square((thunder_time - 1.35f) / 0.05f)) * 0.9f);
+      } else {
+        ripple_renderer_.set_whiteout(0.0f);
+      }
+    } else {
+      if (timer_ >= kBattleTimeToStartHardBattle) {
+        if (!mojgame::AlureBgmPlayer::Play(thunder_bgm_, -1)) {
+          mojgame::LOGGER().Error("Failed to play thunder ambient bgm");
+        }
+        thunder_bgm_playing_ = true;
+      }
+    }
     if (stimulus_.effect > 0.0f) {
       for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
         if (glm::length2(phantoms_[i].pos() - stimulus_.pos) < 0.1f * 0.1f) {
@@ -226,7 +280,11 @@ void ProductionScene::Direct() {
           if (phantoms_[i].IsDead()) {
             glm::vec2 appearing_pos;
             RandomizeAppearingPositionForPhantom(appearing_pos);
-            phantoms_[i].Revive(timer_ >= kBattleTimeToStartHardBattle, appearing_pos);
+            phantoms_[i].Revive(timer_ >= kBattleTimeToStartHardBattle,
+                                (timer_ >= kBattleTimeToStartSeriousBattle) ?
+                                    glm::linearRand(0.8f, 2.0f) :
+                                    glm::linearRand(0.8f, 1.2f),
+                                appearing_pos);
           }
         }
       }
@@ -263,8 +321,18 @@ void ProductionScene::Direct() {
     phantoms_[i].Stop();
   }
   timer_ = 0.0f;
+  while (timer_ < 3.0f) {
+    thunder_bgm_.ChangeGain(1.0f * (3.0f - timer_));
+    ccrReturnV;
+  }
+  if (!mojgame::AlureBgmPlayer::Stop(thunder_bgm_)) {
+    mojgame::LOGGER().Error("Failed to stop thunder ambient bgm");
+  }
+  rina_.Walk(glm::vec2(0.5f, 0.4f));
+  timer_ = 0.0f;
   while (timer_ < 5.0f) {
     rainy_stimulator_.set_effect_range(kRainStimulusEffectRange * (1.0f - timer_ / 5.0f));
+    rain_bgm_.ChangeGain(0.3f * (1.0f - timer_ / 5.0f));
     ccrReturnV;
   }
   rainy_stimulator_.set_effect_range(kRainStimulusEffectRange * 0.0f);
@@ -272,8 +340,19 @@ void ProductionScene::Direct() {
     phantoms_[i].Disappear();
   }
   ripple_renderer_.DettachAll();
+  if (!mojgame::AlureBgmPlayer::Stop(rain_bgm_)) {
+    mojgame::LOGGER().Error("Failed to stop rain ambient bgm");
+  }
   timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  while (timer_ < 2.0f) {
+    forest_bgm_.ChangeGain(0.3f * (timer_ / 2.0f));
+    ccrReturnV;
+  }
+  if (!mojgame::AlureBgmPlayer::Play(forest_bgm_, -1)) {
+    mojgame::LOGGER().Error("Failed to play forest ambient bgm");
+  }
+  timer_ = 0.0f;
+  while (timer_ < 2.0f) {
     ccrReturnV;
   }
   pablo_.Appear(glm::vec2(0.55f, 1.0f));
@@ -372,6 +451,18 @@ void ProductionScene::Direct() {
   }
   telop_renderer_.Reset("Fin", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
+  timer_ = 0.0f;
+  while (timer_ < 30.0f) {
+    ccrReturnV;
+  }
+  timer_ = 0.0f;
+  while (timer_ < 10.0f) {
+    forest_bgm_.ChangeGain(0.3f * (1.0f - timer_ / 10.0f));
+    ccrReturnV;
+  }
+  if (!mojgame::AlureBgmPlayer::Stop(forest_bgm_)) {
+    mojgame::LOGGER().Error("Failed to stop forest ambient bgm");
+  }
   while (true) {
     ccrReturnV;
   }

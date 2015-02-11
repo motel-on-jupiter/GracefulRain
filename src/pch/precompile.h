@@ -3,6 +3,7 @@
  */
 #include "mojgame/includer/crtdbg_include.h"
 
+#include "mojgame/includer/al_include.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/includer/gl_include.h"
 #include "mojgame/includer/glm_include.h"

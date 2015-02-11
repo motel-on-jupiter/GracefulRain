@@ -8,6 +8,7 @@
 #include "core/GracefulRainTweakerContext.h"
 #include "mojgame/auxiliary/atb_aux.h"
 #include "mojgame/auxiliary/csyntax_aux.h"
+#include "mojgame/includer/al_include.h"
 #include "mojgame/includer/atb_include.h"
 #include "mojgame/includer/gl_include.h"
 #include "mojgame/includer/sdl_include.h"
@@ -91,6 +92,15 @@ int GracefulRainApp::Run() {
   int glut_argc = 0;
   glutInit(&glut_argc, { });
 
+  // Initialize the ALURE
+  if (!alureInitDevice(NULL, NULL)) {
+    mojgame::LOGGER().Error(
+        "Failed to initialize ALURE library (errmsg: %s)",
+        alureGetErrorString());
+    CleanUp();
+    return -1;
+  }
+
   // Initialize the tweaker library
   if (TwInit(TW_OPENGL, NULL) == 0) {
     mojgame::LOGGER().Error(
@@ -173,13 +183,16 @@ int GracefulRainApp::Run() {
       break;
     }
 
-    // Update the game
+    // Update the objects
     if (!game_->Step(kGameLoopIntervalSec * tweaker_ctx.system_time_speed,
                      kWindowSize)) {
       mojgame::LOGGER().Error("Failed to step the game");
       loop_stat = -1;
       break;
     }
+
+    // Execute audio work
+    alureUpdate();
 
     // Render the objects
     mojgame::gl_rendering::clear_color_buffer();
@@ -234,6 +247,11 @@ void GracefulRainApp::CleanUp() {
   if (TwTerminate() == 0) {
     // Ignore the error to terminate the tweaker
     // because the tweaker library may be not initialized
+  }
+  if (!alureShutdownDevice()) {
+      mojgame::LOGGER().Warn(
+          "Failed to finalize ALURE library (errmsg: %s)",
+          alureGetErrorString());
   }
   if (context_ != nullptr) {
     SDL_GL_DeleteContext(context_);

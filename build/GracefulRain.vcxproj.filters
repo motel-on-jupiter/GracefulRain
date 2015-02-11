@@ -79,6 +79,9 @@
     <Filter Include="src\core\actor">
       <UniqueIdentifier>{3ed32e65-56f3-4553-b4bf-4d64f90ffe13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\mojgame\audio">
+      <UniqueIdentifier>{75a1c3e9-c460-4d8f-8f68-87c944ca79f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cc">
@@ -269,6 +272,9 @@
     </ClCompile>
     <ClCompile Include="..\src\core\actor\Phantom.cc">
       <Filter>src\core\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mojgame\audio\BgmPlayer.cc">
+      <Filter>src\mojgame\audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -484,6 +490,9 @@
     </ClInclude>
     <ClInclude Include="..\src\core\actor\Phantom.h">
       <Filter>src\core\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\audio\BgmPlayer.h">
+      <Filter>src\mojgame\audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
