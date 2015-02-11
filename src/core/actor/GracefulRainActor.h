@@ -21,6 +21,7 @@ class GracefulRainActor : public mojgame::PlanarActor {
         step_pos_(),
         step_count_(0.0f),
         hop_(false),
+        stamp_(false),
         walk_finished_(false) {
   }
   void Appear(const glm::vec2 &pos) {
