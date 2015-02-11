@@ -25,10 +25,11 @@ class Phantom : public GracefulRainActor {
   bool IsDead() const {
     return life_ == 0;
   }
-  void Revive(bool tough, const glm::vec2 &pos) {
+  void Revive(bool tough, float speed_scale, const glm::vec2 &pos) {
     life_ = tough ? kLifeMaxOnTough : kLifeMax;
     set_stimulus_effect(tough ? kStimulusEffectOnTough : kStimulusEffect);
     set_stimulus_color(tough ? kStimulusColorOnTough : kStimulusColor);
+    set_walk_speed(kSpeed * speed_scale);
     set_pos(pos);
   }
 
