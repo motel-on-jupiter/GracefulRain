@@ -44,6 +44,7 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       rain_bgm_("audio/rain.wav"),
       thunder_bgm_("audio/thunder.wav"),
       forest_bgm_("audio/forest.wav"),
+      footstep_se_("audio/footstep_place.wav"),
       ccr_param_(nullptr),
       rina_(),
       pablo_(),
@@ -86,11 +87,25 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     ripple_renderer_.Finalize();
     return false;
   }
+  if (!footstep_se_.Initialize(1.0f, 0.1f)) {
+    mojgame::LOGGER().Error("Failed to initialize footstep se");
+    forest_bgm_.Finalize();
+    thunder_bgm_.Finalize();
+    rain_bgm_.Finalize();
+    telop_renderer_.Finalize();
+    ripple_renderer_.Finalize();
+    return false;
+  }
+  rina_.AttachFootstepSe(footstep_se_);
+  pablo_.AttachFootstepSe(footstep_se_);
   return true;
 }
 
 void ProductionScene::OnFinal() {
   ccrAbort(ccr_param_);
+  rina_.DettachFootstepSe();
+  pablo_.DettachFootstepSe();
+  footstep_se_.Finalize();
   forest_bgm_.Finalize();
   thunder_bgm_.Finalize();
   rain_bgm_.Finalize();

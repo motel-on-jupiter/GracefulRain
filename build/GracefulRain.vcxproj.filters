@@ -276,6 +276,9 @@
     <ClCompile Include="..\src\mojgame\audio\BgmPlayer.cc">
       <Filter>src\mojgame\audio</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\mojgame\audio\SePlayer.cc">
+      <Filter>src\mojgame\audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\pch\precompile.h">
@@ -492,6 +495,9 @@
       <Filter>src\core\actor</Filter>
     </ClInclude>
     <ClInclude Include="..\src\mojgame\audio\BgmPlayer.h">
+      <Filter>src\mojgame\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mojgame\audio\SePlayer.h">
       <Filter>src\mojgame\audio</Filter>
     </ClInclude>
   </ItemGroup>

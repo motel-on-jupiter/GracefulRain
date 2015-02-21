@@ -4,6 +4,7 @@
 #ifndef CORE_ACTOR_GRACEFULRAINACTOR_H_
 #define CORE_ACTOR_GRACEFULRAINACTOR_H_
 
+#include "mojgame/audio/SePlayer.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
 #include "mojgame/entity/PlanarActor.h"
 #include "mojgame/includer/glm_include.h"
@@ -13,6 +14,7 @@ class GracefulRainActor : public mojgame::PlanarActor {
   GracefulRainActor(float speed, float step_length, float feet_margin,
                     const glm::vec3 &stimulus_color, float stimulus_effect)
       : mojgame::PlanarActor(speed),
+        footstep_se_(nullptr),
         step_length_(step_length),
         feet_margin_(feet_margin),
         stimulus_color_(stimulus_color),
@@ -23,6 +25,13 @@ class GracefulRainActor : public mojgame::PlanarActor {
         hop_(false),
         stamp_(false),
         walk_finished_(false) {
+  }
+  bool AttachFootstepSe(mojgame::AlureSe &footstep_se) {
+    footstep_se_ = &footstep_se;
+    return true;
+  }
+  void DettachFootstepSe() {
+    footstep_se_ = nullptr;
   }
   void Appear(const glm::vec2 &pos) {
     mojgame::PlanarActor::Appear(pos, 0.0f, glm::vec2());
@@ -48,6 +57,7 @@ class GracefulRainActor : public mojgame::PlanarActor {
   }
 
  private:
+  mojgame::AlureSe *footstep_se_;
   float step_length_;
   float feet_margin_;
   glm::vec3 stimulus_color_;

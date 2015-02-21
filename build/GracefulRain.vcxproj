@@ -28,6 +28,7 @@
     <ClCompile Include="..\src\mojgame\animation\AnimationPlayer.cc" />
     <ClCompile Include="..\src\mojgame\animation\AnimationResource.cc" />
     <ClCompile Include="..\src\mojgame\audio\BgmPlayer.cc" />
+    <ClCompile Include="..\src\mojgame\audio\SePlayer.cc" />
     <ClCompile Include="..\src\mojgame\auxiliary\assert_aux.cc" />
     <ClCompile Include="..\src\mojgame\auxiliary\atb_aux.cc" />
     <ClCompile Include="..\src\mojgame\auxiliary\csyntax_aux.cc" />
@@ -108,6 +109,7 @@
     <ClInclude Include="..\src\mojgame\animation\AnimationPlayer.h" />
     <ClInclude Include="..\src\mojgame\animation\AnimationResource.h" />
     <ClInclude Include="..\src\mojgame\audio\BgmPlayer.h" />
+    <ClInclude Include="..\src\mojgame\audio\SePlayer.h" />
     <ClInclude Include="..\src\mojgame\auxiliary\assert_aux.h" />
     <ClInclude Include="..\src\mojgame\auxiliary\atb_aux.h" />
     <ClInclude Include="..\src\mojgame\auxiliary\csyntax_aux.h" />

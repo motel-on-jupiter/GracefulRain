@@ -2,6 +2,7 @@
  * Copyright (C) 2014 The Motel On Jupiter
  */
 #include "core/actor/GracefulRainActor.h"
+#include "mojgame/audio/SePlayer.h"
 #include "mojgame/catalogue/renderer/RippleRenderer.h"
 #include "mojgame/entity/PlanarActor.h"
 #include "mojgame/includer/glm_include.h"
@@ -28,6 +29,9 @@ bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
         mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
         return false;
       }
+      if (footstep_se_ != nullptr) {
+        mojgame::AlureSePlayer::Play(*footstep_se_);
+      }
     } else if (walk_finished_ || stamp_) {
       if (stamp_) {
         stamp_ = false;
@@ -45,6 +49,9 @@ bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
         mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
         return false;
       }
+      if (footstep_se_ != nullptr) {
+        mojgame::AlureSePlayer::Play(*footstep_se_);
+      }
     } else if (hop_) {
       hop_ = false;
       glm::vec2 margin = glm::vec2(0.0f, feet_margin_ * 0.7f);
@@ -54,11 +61,17 @@ bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
         mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
         return false;
       }
+      if (footstep_se_ != nullptr) {
+        mojgame::AlureSePlayer::Play(*footstep_se_);
+      }
       margin.y *= -1.0f;
       stimulus.pos = pos() + glm::rotate(margin, rot());
       if (!renderer.Receive(stimulus)) {
         mojgame::LOGGER().Error("Failed for renderer to receive stimulus");
         return false;
+      }
+      if (footstep_se_ != nullptr) {
+        mojgame::AlureSePlayer::Play(*footstep_se_);
       }
     }
   }
