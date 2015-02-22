@@ -4,6 +4,7 @@
 #include "core/scene/production/ProductionScene.h"
 #include <string>
 #include <vector>
+#include "core/GracefulRainTweakerContext.h"
 #include "core/scene/GracefulRainScene.h"
 #include "mojgame/audio/BgmPlayer.h"
 #include "mojgame/auxiliary/coroutine_aux.h"
@@ -60,9 +61,6 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     mojgame::LOGGER().Error("Failed to initialize ripple renderer");
     return false;
   }
-  ripple_renderer_.set_filtering_r(0.1f);
-  ripple_renderer_.set_filtering_g(0.1f);
-  ripple_renderer_.set_filtering_b(0.1f);
   ripple_renderer_.Attach(rainy_stimulator_);
   if (!telop_renderer_.Initialize()) {
     mojgame::LOGGER().Error("Failed to initialize telop renderer");
@@ -101,11 +99,14 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
   }
   rina_.AttachFootstepSe(footstep_se_);
   pablo_.AttachFootstepSe(footstep_se_);
+  mojgame::atb_aux::AddColor3fVarRW(tweak_bar(), "Ripples", "Color Filter",
+                                    tweaker_ctx.ripples_rgb_filter, nullptr);
   return true;
 }
 
 void ProductionScene::OnFinal() {
   ccrAbort(ccr_param_);
+  mojgame::atb_aux::RemoveVar(tweak_bar(), "Ripples", "Color Filter");
   rina_.DettachFootstepSe();
   pablo_.DettachFootstepSe();
   footstep_se_.Finalize();
@@ -527,6 +528,15 @@ bool ProductionScene::OnStep(float elapsed_time) {
 }
 
 bool ProductionScene::OnRendering(const glm::vec2 &window_size) {
+  if (ripple_renderer_.filtering_r() != tweaker_ctx.ripples_rgb_filter.r) {
+    ripple_renderer_.set_filtering_r(tweaker_ctx.ripples_rgb_filter.r);
+  }
+  if (ripple_renderer_.filtering_g() != tweaker_ctx.ripples_rgb_filter.g) {
+    ripple_renderer_.set_filtering_g(tweaker_ctx.ripples_rgb_filter.g);
+  }
+  if (ripple_renderer_.filtering_b() != tweaker_ctx.ripples_rgb_filter.b) {
+    ripple_renderer_.set_filtering_b(tweaker_ctx.ripples_rgb_filter.b);
+  }
   for (auto it = renderer_stack_.begin(); it != renderer_stack_.end(); ++it) {
     if (!(*it)->Render(window_size)) {
       mojgame::LOGGER().Warn("Failed to render by renderer");
