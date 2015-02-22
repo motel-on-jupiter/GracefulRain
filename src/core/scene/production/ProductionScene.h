@@ -50,6 +50,7 @@ class ProductionScene : public GracefulRainBaseScene {
   void PlayPhantomVoice(int phantom);
   void RandomizeAppearingPositionForPhantom(glm::vec2 &appearing_pos);
   void Direct();
+  void ActuateMeteo(const glm::vec2 &pos);
 
   mojgame::RippleGLRenderer ripple_renderer_;
   mojgame::RainyRippleStimulator rainy_stimulator_;
@@ -60,6 +61,7 @@ class ProductionScene : public GracefulRainBaseScene {
   mojgame::AlureBgm forest_bgm_;
   mojgame::AlureSe footstep_se_;
   mojgame::AlureSe phantom_voice_se_;
+  mojgame::AlureSe meteo_se_;
   void *ccr_param_;
   Rina rina_;
   Pablo pablo_;

@@ -47,6 +47,7 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       forest_bgm_("audio/forest.wav"),
       footstep_se_("audio/footstep_place.wav"),
       phantom_voice_se_("audio/phantom_voice.wav"),
+      meteo_se_("audio/meteo.wav"),
       ccr_param_(nullptr),
       rina_(),
       pablo_(),
@@ -108,6 +109,17 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     ripple_renderer_.Finalize();
     return false;
   }
+  if (!meteo_se_.Initialize(1.0f, 0.2f)) {
+    mojgame::LOGGER().Error("Failed to initialize meteo se");
+    phantom_voice_se_.Finalize();
+    footstep_se_.Finalize();
+    forest_bgm_.Finalize();
+    thunder_bgm_.Finalize();
+    rain_bgm_.Finalize();
+    telop_renderer_.Finalize();
+    ripple_renderer_.Finalize();
+    return false;
+  }
   rina_.AttachFootstepSe(footstep_se_);
   pablo_.AttachFootstepSe(footstep_se_);
   mojgame::atb_aux::AddColor3fVarRW(tweak_bar(), "Ripples", "Color Filter",
@@ -121,6 +133,7 @@ void ProductionScene::OnFinal() {
   mojgame::atb_aux::RemoveVar(tweak_bar(), "Ripples", "Color Filter");
   rina_.DettachFootstepSe();
   pablo_.DettachFootstepSe();
+  meteo_se_.Finalize();
   phantom_voice_se_.Finalize();
   footstep_se_.Finalize();
   forest_bgm_.Finalize();
@@ -569,16 +582,22 @@ bool ProductionScene::OnRendering(const glm::vec2 &window_size) {
   return true;
 }
 
+void ProductionScene::ActuateMeteo(const glm::vec2 &pos) {
+  stimulus_.pos = pos + glm::diskRand(0.1f);
+  stimulus_.color = kMouseStimulusColor;
+  stimulus_.effect = kMouseStimulusEffect;
+  glm::vec3 playing_pos(stimulus_.pos.x, 0.0f, stimulus_.pos.y);
+  mojgame::AlureSePlayer::Play(meteo_se_, playing_pos);
+}
+
 bool ProductionScene::OnReaction(const SDL_MouseButtonEvent &button,
                                  const glm::vec2 &window_size) {
   if (button.button == 1) {
     if (button.type == SDL_MOUSEBUTTONDOWN) {
       glm::vec2 pos = glm::vec2(static_cast<float>(button.x),
-                               static_cast<float>(button.y)) / window_size;
+                                static_cast<float>(button.y)) / window_size;
       pos.y = 1.0f - pos.y;
-      stimulus_.pos = pos + glm::diskRand(0.1f);
-      stimulus_.color = kMouseStimulusColor;
-      stimulus_.effect = kMouseStimulusEffect;
+      ActuateMeteo(pos);
     }
   }
   return true;
@@ -588,11 +607,9 @@ bool ProductionScene::OnReaction(const SDL_MouseMotionEvent &motion,
                                  const glm::vec2 &window_size) {
   if (motion.state == SDL_PRESSED) {
     glm::vec2 pos = glm::vec2(static_cast<float>(motion.x),
-                             static_cast<float>(motion.y)) / window_size;
+                              static_cast<float>(motion.y)) / window_size;
     pos.y = 1.0f - pos.y;
-    stimulus_.pos = pos + glm::diskRand(0.1f);
-    stimulus_.color = kMouseStimulusColor;
-    stimulus_.effect = kMouseStimulusEffect;
+    ActuateMeteo(pos);
   }
   return true;
 }
