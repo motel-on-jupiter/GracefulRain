@@ -60,6 +60,9 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     mojgame::LOGGER().Error("Failed to initialize ripple renderer");
     return false;
   }
+  ripple_renderer_.set_filtering_r(0.1f);
+  ripple_renderer_.set_filtering_g(0.1f);
+  ripple_renderer_.set_filtering_b(0.1f);
   ripple_renderer_.Attach(rainy_stimulator_);
   if (!telop_renderer_.Initialize()) {
     mojgame::LOGGER().Error("Failed to initialize telop renderer");
@@ -274,11 +277,11 @@ void ProductionScene::Direct() {
         thunder_time -= 30.0f;
       }
       if (thunder_time > 0.95f && thunder_time < 1.35f) {
-        ripple_renderer_.set_whiteout(0.9f);
+        ripple_renderer_.set_filling_level(0.9f);
       } else if (thunder_time > 1.35f && thunder_time < 1.40f) {
-        ripple_renderer_.set_whiteout((1.0f - mojgame::math_aux::square((thunder_time - 1.35f) / 0.05f)) * 0.9f);
+        ripple_renderer_.set_filling_level((1.0f - mojgame::math_aux::square((thunder_time - 1.35f) / 0.05f)) * 0.9f);
       } else {
-        ripple_renderer_.set_whiteout(0.0f);
+        ripple_renderer_.set_filling_level(0.0f);
       }
     } else {
       if (timer_ >= kBattleTimeToStartHardBattle) {
