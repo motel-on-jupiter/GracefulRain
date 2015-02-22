@@ -101,6 +101,7 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
   pablo_.AttachFootstepSe(footstep_se_);
   mojgame::atb_aux::AddColor3fVarRW(tweak_bar(), "Ripples", "Color Filter",
                                     tweaker_ctx.ripples_rgb_filter, nullptr);
+  alListenerfv(AL_POSITION, glm::value_ptr(glm::vec3()));
   return true;
 }
 

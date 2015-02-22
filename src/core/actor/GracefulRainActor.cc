@@ -30,7 +30,7 @@ bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
         return false;
       }
       if (footstep_se_ != nullptr) {
-        mojgame::AlureSePlayer::Play(*footstep_se_);
+        mojgame::AlureSePlayer::Play(*footstep_se_, glm::vec3(pos().x, 0.0f, pos().y));
       }
     } else if (walk_finished_ || stamp_) {
       if (stamp_) {
@@ -50,7 +50,7 @@ bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
         return false;
       }
       if (footstep_se_ != nullptr) {
-        mojgame::AlureSePlayer::Play(*footstep_se_);
+        mojgame::AlureSePlayer::Play(*footstep_se_, glm::vec3(pos().x, 0.0f, pos().y));
       }
     } else if (hop_) {
       hop_ = false;
@@ -62,7 +62,7 @@ bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
         return false;
       }
       if (footstep_se_ != nullptr) {
-        mojgame::AlureSePlayer::Play(*footstep_se_);
+        mojgame::AlureSePlayer::Play(*footstep_se_, glm::vec3(pos().x, 0.0f, pos().y));
       }
       margin.y *= -1.0f;
       stimulus.pos = pos() + glm::rotate(margin, rot());
@@ -71,7 +71,7 @@ bool GracefulRainActor::Stimulate(mojgame::RippleGLRenderer &renderer) {
         return false;
       }
       if (footstep_se_ != nullptr) {
-        mojgame::AlureSePlayer::Play(*footstep_se_);
+        mojgame::AlureSePlayer::Play(*footstep_se_, glm::vec3(pos().x, 0.0f, pos().y));
       }
     }
   }
