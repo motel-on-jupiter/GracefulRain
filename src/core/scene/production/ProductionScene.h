@@ -67,7 +67,7 @@ class ProductionScene : public GracefulRainBaseScene {
   Pablo pablo_;
   Phantom phantoms_[kNumPhantoms];
   mojgame::RippleStimulus stimulus_;
-  float timer_;
+  float direction_timer_;
   float rina_escape_timer_;
   bool thunder_bgm_playing_;
 };

@@ -53,7 +53,7 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       pablo_(),
       phantoms_(),
       stimulus_(),
-      timer_(0.0f),
+      direction_timer_(0.0f),
       rina_escape_timer_(0.0f),
       thunder_bgm_playing_(false) {
 }
@@ -181,30 +181,30 @@ void ProductionScene::Direct() {
     mojgame::LOGGER().Error("Failed to play rain ambient bgm");
   }
   renderer_stack_.push_back(&ripple_renderer_);
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
     ccrReturnV;
   }
   telop_renderer_.Reset("Developed by The Motel on Jupiter", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
-  timer_ = 0.0f;
-  while (timer_ < 4.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 4.0f) {
     ccrReturnV;
   }
   renderer_stack_.pop_back();
-  timer_ = 0.0f;
-  while (timer_ < 0.1f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.1f) {
     ccrReturnV;
   }
   telop_renderer_.Reset("- Lost in Rain -", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
-  timer_ = 0.0f;
-  while (timer_ < 4.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 4.0f) {
     ccrReturnV;
   }
   renderer_stack_.pop_back();
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
     ccrReturnV;
   }
   rina_.Appear(glm::vec2(0.5f, 0.0f));
@@ -212,26 +212,26 @@ void ProductionScene::Direct() {
   while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.0f) {
     ccrReturnV;
   }
   rina_.Hop();
-  timer_ = 0.0f;
-  while (timer_ < 0.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.5f) {
     ccrReturnV;
   }
   rina_.Hop();
-  timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.0f) {
     ccrReturnV;
   }
   rina_.Walk(glm::vec2(0.5f, 1.0f));
   while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 0.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.5f) {
     ccrReturnV;
   }
   pablo_.Appear(glm::vec2(0.5f, 0.0f));
@@ -239,32 +239,32 @@ void ProductionScene::Direct() {
   while (pablo_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.0f) {
     ccrReturnV;
   }
   pablo_.Walk(glm::vec2(0.4f, 0.5f));
   while (pablo_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.0f) {
     ccrReturnV;
   }
   pablo_.Walk(glm::vec2(0.6f, 0.5f));
   while (pablo_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
     ccrReturnV;
   }
   pablo_.Walk(glm::vec2(0.6f, 1.0f));
   while (pablo_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.0f) {
     ccrReturnV;
   }
   rina_.Appear(glm::vec2(0.5f, 1.0f));
@@ -272,8 +272,8 @@ void ProductionScene::Direct() {
   while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.5f) {
     ccrReturnV;
   }
   for (i = 0; i < 2; ++i) {
@@ -285,8 +285,8 @@ void ProductionScene::Direct() {
   while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.5f) {
     ccrReturnV;
   }
   for (i = 2; i < 4; ++i) {
@@ -298,7 +298,7 @@ void ProductionScene::Direct() {
   while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
+  direction_timer_ = 0.0f;
   rina_escape_timer_ = 0.0f;
   for (i = 4; i < ARRAYSIZE(phantoms_); ++i) {
     glm::vec2 appearing_pos;
@@ -306,9 +306,9 @@ void ProductionScene::Direct() {
     phantoms_[i].Appear(appearing_pos);
     phantoms_[i].Walk(rina_);
   }
-  while (timer_ < kBattleTime) {
+  while (direction_timer_ < kBattleTime) {
     if (thunder_bgm_playing_) {
-      float thunder_time = timer_ - kBattleTimeToStartHardBattle;
+      float thunder_time = direction_timer_ - kBattleTimeToStartHardBattle;
       while (thunder_time > 30.0f) {
         thunder_time -= 30.0f;
       }
@@ -320,7 +320,7 @@ void ProductionScene::Direct() {
         ripple_renderer_.set_filling_level(0.0f);
       }
     } else {
-      if (timer_ >= kBattleTimeToStartHardBattle) {
+      if (direction_timer_ >= kBattleTimeToStartHardBattle) {
         if (!mojgame::AlureBgmPlayer::Play(thunder_bgm_, -1)) {
           mojgame::LOGGER().Error("Failed to play thunder ambient bgm");
         }
@@ -335,8 +335,8 @@ void ProductionScene::Direct() {
             glm::vec2 appearing_pos;
             PlayPhantomVoice(i);
             RandomizeAppearingPositionForPhantom(appearing_pos);
-            phantoms_[i].Revive(timer_ >= kBattleTimeToStartHardBattle,
-                                (timer_ >= kBattleTimeToStartSeriousBattle) ?
+            phantoms_[i].Revive(direction_timer_ >= kBattleTimeToStartHardBattle,
+                                (direction_timer_ >= kBattleTimeToStartSeriousBattle) ?
                                     glm::linearRand(0.8f, 2.0f) :
                                     glm::linearRand(0.8f, 1.2f),
                                 appearing_pos);
@@ -365,6 +365,7 @@ void ProductionScene::Direct() {
         }
         telop_renderer_.Reset("Game Over", glm::vec2(0.5f));
         renderer_stack_.push_back(&telop_renderer_);
+        ripple_renderer_.set_filling_level(0.0f);
         while (true) {
           ccrReturnV;
         }
@@ -376,19 +377,19 @@ void ProductionScene::Direct() {
     phantoms_[i].Stop();
     PlayPhantomVoice(i);
   }
-  timer_ = 0.0f;
-  while (timer_ < 3.0f) {
-    thunder_bgm_.ChangeGain(1.0f * (3.0f - timer_));
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 3.0f) {
+    thunder_bgm_.ChangeGain(1.0f * (3.0f - direction_timer_));
     ccrReturnV;
   }
   if (!mojgame::AlureBgmPlayer::Stop(thunder_bgm_)) {
     mojgame::LOGGER().Error("Failed to stop thunder ambient bgm");
   }
   rina_.Walk(glm::vec2(0.5f, 0.4f));
-  timer_ = 0.0f;
-  while (timer_ < 5.0f) {
-    rainy_stimulator_.set_effect_range(kRainStimulusEffectRange * (1.0f - timer_ / 5.0f));
-    rain_bgm_.ChangeGain(0.3f * (1.0f - timer_ / 5.0f));
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 5.0f) {
+    rainy_stimulator_.set_effect_range(kRainStimulusEffectRange * (1.0f - direction_timer_ / 5.0f));
+    rain_bgm_.ChangeGain(0.3f * (1.0f - direction_timer_ / 5.0f));
     ccrReturnV;
   }
   rainy_stimulator_.set_effect_range(kRainStimulusEffectRange * 0.0f);
@@ -399,40 +400,40 @@ void ProductionScene::Direct() {
   if (!mojgame::AlureBgmPlayer::Stop(rain_bgm_)) {
     mojgame::LOGGER().Error("Failed to stop rain ambient bgm");
   }
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
-    forest_bgm_.ChangeGain(0.3f * (timer_ / 2.0f));
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
+    forest_bgm_.ChangeGain(0.3f * (direction_timer_ / 2.0f));
     ccrReturnV;
   }
   if (!mojgame::AlureBgmPlayer::Play(forest_bgm_, -1)) {
     mojgame::LOGGER().Error("Failed to play forest ambient bgm");
   }
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
     ccrReturnV;
   }
   pablo_.Appear(glm::vec2(0.55f, 1.0f));
   pablo_.Walk(glm::vec2(0.55f, 0.55f));
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
     ccrReturnV;
   }
   rina_.Hop();
-  timer_ = 0.0f;
-  while (timer_ < 0.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.5f) {
     ccrReturnV;
   }
   rina_.Hop();
-  timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.0f) {
     ccrReturnV;
   }
   rina_.Walk(glm::vec2(0.5f, 0.5f));
   while (rina_.IsWalking() || pablo_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.0f) {
     ccrReturnV;
   }
   rina_.Walk(glm::vec2(0.5f, 0.03f));
@@ -440,80 +441,80 @@ void ProductionScene::Direct() {
   while (pablo_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 1.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.5f) {
     ccrReturnV;
   }
   pablo_.Walk(glm::vec2(0.55f, 0.425f));
   while (pablo_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 3.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 3.0f) {
     ccrReturnV;
   }
   rina_.Walk(glm::vec2(0.5f, 0.3f));
   while (rina_.IsWalking()) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
     ccrReturnV;
   }
   rina_.Hop();
-  timer_ = 0.0f;
-  while (timer_ < 0.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.5f) {
     ccrReturnV;
   }
   rina_.Hop();
-  timer_ = 0.0f;
-  while (timer_ < 1.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.5f) {
     ccrReturnV;
   }
   rina_.Stamp();
-  timer_ = 0.0f;
-  while (timer_ < 0.25f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.25f) {
     ccrReturnV;
   }
   rina_.Stamp();
-  timer_ = 0.0f;
-  while (timer_ < 0.25f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.25f) {
     ccrReturnV;
   }
   rina_.Stamp();
-  timer_ = 0.0f;
-  while (timer_ < 0.25f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.25f) {
     ccrReturnV;
   }
   rina_.Stamp();
-  timer_ = 0.0f;
-  while (timer_ < 0.25f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 0.25f) {
     ccrReturnV;
   }
   rina_.Stamp();
-  timer_ = 0.0f;
-  while (timer_ < 2.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 2.0f) {
     ccrReturnV;
   }
   pablo_.Walk(glm::vec2(0.55f, 0.0f));
-  timer_ = 0.0f;
-  while (timer_ < 1.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.5f) {
     ccrReturnV;
   }
   rina_.Walk(glm::vec2(0.5f, 0.0f));
-  timer_ = 0.0f;
-  while (timer_ < 1.5f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 1.5f) {
     ccrReturnV;
   }
   telop_renderer_.Reset("Fin", glm::vec2(0.5f));
   renderer_stack_.push_back(&telop_renderer_);
-  timer_ = 0.0f;
-  while (timer_ < 30.0f) {
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 30.0f) {
     ccrReturnV;
   }
-  timer_ = 0.0f;
-  while (timer_ < 10.0f) {
-    forest_bgm_.ChangeGain(0.3f * (1.0f - timer_ / 10.0f));
+  direction_timer_ = 0.0f;
+  while (direction_timer_ < 10.0f) {
+    forest_bgm_.ChangeGain(0.3f * (1.0f - direction_timer_ / 10.0f));
     ccrReturnV;
   }
   if (!mojgame::AlureBgmPlayer::Stop(forest_bgm_)) {
@@ -526,7 +527,7 @@ void ProductionScene::Direct() {
 }
 
 bool ProductionScene::OnStep(float elapsed_time) {
-  timer_ += elapsed_time;
+  direction_timer_ += elapsed_time;
   rina_escape_timer_ += elapsed_time;
   if (!finished()) {
     Direct();
