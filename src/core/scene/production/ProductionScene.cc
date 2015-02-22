@@ -46,6 +46,7 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       thunder_bgm_("audio/thunder.wav"),
       forest_bgm_("audio/forest.wav"),
       footstep_se_("audio/footstep_place.wav"),
+      phantom_voice_se_("audio/phantom_voice.wav"),
       ccr_param_(nullptr),
       rina_(),
       pablo_(),
@@ -97,6 +98,16 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     ripple_renderer_.Finalize();
     return false;
   }
+  if (!phantom_voice_se_.Initialize(1.0f, 0.5f)) {
+    mojgame::LOGGER().Error("Failed to initialize phantom voice se");
+    footstep_se_.Finalize();
+    forest_bgm_.Finalize();
+    thunder_bgm_.Finalize();
+    rain_bgm_.Finalize();
+    telop_renderer_.Finalize();
+    ripple_renderer_.Finalize();
+    return false;
+  }
   rina_.AttachFootstepSe(footstep_se_);
   pablo_.AttachFootstepSe(footstep_se_);
   mojgame::atb_aux::AddColor3fVarRW(tweak_bar(), "Ripples", "Color Filter",
@@ -110,6 +121,7 @@ void ProductionScene::OnFinal() {
   mojgame::atb_aux::RemoveVar(tweak_bar(), "Ripples", "Color Filter");
   rina_.DettachFootstepSe();
   pablo_.DettachFootstepSe();
+  phantom_voice_se_.Finalize();
   footstep_se_.Finalize();
   forest_bgm_.Finalize();
   thunder_bgm_.Finalize();
@@ -118,6 +130,13 @@ void ProductionScene::OnFinal() {
   telop_renderer_.Finalize();
   ripple_renderer_.DettachAll();
   ripple_renderer_.Finalize();
+}
+
+void ProductionScene::PlayPhantomVoice(int phantom) {
+  phantom_voice_se_.ChangePitch(phantoms_[phantom].voice_pitch());
+  glm::vec3 playing_pos(phantoms_[phantom].pos().y, 0.0f,
+                        phantoms_[phantom].pos().y);
+  mojgame::AlureSePlayer::Play(phantom_voice_se_, playing_pos);
 }
 
 void ProductionScene::RandomizeAppearingPositionForPhantom(glm::vec2 &appearing_pos) {
@@ -247,6 +266,7 @@ void ProductionScene::Direct() {
   for (i = 0; i < 2; ++i) {
     phantoms_[i].Appear(kPhantomInitialAppearingPoss[i]);
     phantoms_[i].Walk(rina_);
+    PlayPhantomVoice(i);
   }
   rina_.Walk(glm::vec2(0.5f, 0.6f));
   while (rina_.IsWalking()) {
@@ -259,6 +279,7 @@ void ProductionScene::Direct() {
   for (i = 2; i < 4; ++i) {
     phantoms_[i].Appear(kPhantomInitialAppearingPoss[i]);
     phantoms_[i].Walk(rina_);
+    PlayPhantomVoice(i);
   }
   rina_.Walk(glm::vec2(0.5f, 0.5f));
   while (rina_.IsWalking()) {
@@ -267,10 +288,10 @@ void ProductionScene::Direct() {
   timer_ = 0.0f;
   rina_escape_timer_ = 0.0f;
   for (i = 4; i < ARRAYSIZE(phantoms_); ++i) {
-      glm::vec2 appearing_pos;
-      RandomizeAppearingPositionForPhantom(appearing_pos);
-      phantoms_[i].Appear(appearing_pos);
-      phantoms_[i].Walk(rina_);
+    glm::vec2 appearing_pos;
+    RandomizeAppearingPositionForPhantom(appearing_pos);
+    phantoms_[i].Appear(appearing_pos);
+    phantoms_[i].Walk(rina_);
   }
   while (timer_ < kBattleTime) {
     if (thunder_bgm_playing_) {
@@ -299,6 +320,7 @@ void ProductionScene::Direct() {
           phantoms_[i].ReceiveDamage();
           if (phantoms_[i].IsDead()) {
             glm::vec2 appearing_pos;
+            PlayPhantomVoice(i);
             RandomizeAppearingPositionForPhantom(appearing_pos);
             phantoms_[i].Revive(timer_ >= kBattleTimeToStartHardBattle,
                                 (timer_ >= kBattleTimeToStartSeriousBattle) ?
@@ -339,6 +361,7 @@ void ProductionScene::Direct() {
   }
   for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
     phantoms_[i].Stop();
+    PlayPhantomVoice(i);
   }
   timer_ = 0.0f;
   while (timer_ < 3.0f) {

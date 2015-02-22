@@ -5,12 +5,15 @@
 #define CORE_ACTOR_PHANTOM_H_
 
 #include "core/actor/GracefulRainActor.h"
+#include "mojgame/audio/SePlayer.h"
 
 class Phantom : public GracefulRainActor {
  public:
   Phantom()
       : GracefulRainActor(kSpeed, 0.0f, 0.0f, kStimulusColor, kStimulusEffect),
+        voice_pitch_(1.0f),
         life_(kLifeMax) {
+    RandomizeVoicePitch();
   }
   void ReceiveDamage() {
     if (life_ > 0) {
@@ -26,11 +29,16 @@ class Phantom : public GracefulRainActor {
     return life_ == 0;
   }
   void Revive(bool tough, float speed_scale, const glm::vec2 &pos) {
+    RandomizeVoicePitch();
     life_ = tough ? kLifeMaxOnTough : kLifeMax;
     set_stimulus_effect(tough ? kStimulusEffectOnTough : kStimulusEffect);
     set_stimulus_color(tough ? kStimulusColorOnTough : kStimulusColor);
     set_walk_speed(kSpeed * speed_scale);
     set_pos(pos);
+  }
+
+  float voice_pitch() const {
+    return voice_pitch_;
   }
 
  private:
@@ -43,6 +51,11 @@ class Phantom : public GracefulRainActor {
   static const float kStimulusEffectOnTough;
   static const int kLifeMaxOnTough;
 
+  void RandomizeVoicePitch() {
+    voice_pitch_ = glm::linearRand(0.9f, 1.2f);
+  }
+
+  float voice_pitch_;
   int life_;
 };
 

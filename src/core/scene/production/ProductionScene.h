@@ -47,6 +47,7 @@ class ProductionScene : public GracefulRainBaseScene {
   static const float kBattleTimeToStartHardBattle;
   static const float kMaxEscapeDistance;
 
+  void PlayPhantomVoice(int phantom);
   void RandomizeAppearingPositionForPhantom(glm::vec2 &appearing_pos);
   void Direct();
 
@@ -58,6 +59,7 @@ class ProductionScene : public GracefulRainBaseScene {
   mojgame::AlureBgm thunder_bgm_;
   mojgame::AlureBgm forest_bgm_;
   mojgame::AlureSe footstep_se_;
+  mojgame::AlureSe phantom_voice_se_;
   void *ccr_param_;
   Rina rina_;
   Pablo pablo_;
