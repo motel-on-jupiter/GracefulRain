@@ -70,6 +70,7 @@ class ProductionScene : public GracefulRainBaseScene {
   float direction_timer_;
   float rina_escape_timer_;
   bool thunder_bgm_playing_;
+  int meteo_se_interval_;
 };
 
 #endif /* CORE_SCENE_PRODUCTION_PRODUCTIONSCENE_H_ */

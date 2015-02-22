@@ -45,9 +45,9 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       rain_bgm_("audio/rain.wav"),
       thunder_bgm_("audio/thunder.wav"),
       forest_bgm_("audio/forest.wav"),
-      footstep_se_("audio/footstep_place.wav"),
-      phantom_voice_se_("audio/phantom_voice.wav"),
-      meteo_se_("audio/meteo.wav"),
+      footstep_se_("audio/footstep_place.wav", 5),
+      phantom_voice_se_("audio/phantom_voice.wav", 20),
+      meteo_se_("audio/meteo.wav", 30),
       ccr_param_(nullptr),
       rina_(),
       pablo_(),
@@ -55,7 +55,8 @@ ProductionScene::ProductionScene(TwBar &tweak_bar)
       stimulus_(),
       direction_timer_(0.0f),
       rina_escape_timer_(0.0f),
-      thunder_bgm_playing_(false) {
+      thunder_bgm_playing_(false),
+      meteo_se_interval_(0) {
 }
 
 bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
@@ -90,7 +91,7 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     ripple_renderer_.Finalize();
     return false;
   }
-  if (!footstep_se_.Initialize(1.0f, 0.1f)) {
+  if (!footstep_se_.Initialize(1.0f, 0.2f)) {
     mojgame::LOGGER().Error("Failed to initialize footstep se");
     forest_bgm_.Finalize();
     thunder_bgm_.Finalize();
@@ -99,7 +100,7 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     ripple_renderer_.Finalize();
     return false;
   }
-  if (!phantom_voice_se_.Initialize(1.0f, 0.5f)) {
+  if (!phantom_voice_se_.Initialize(1.0f, 0.1f)) {
     mojgame::LOGGER().Error("Failed to initialize phantom voice se");
     footstep_se_.Finalize();
     forest_bgm_.Finalize();
@@ -109,7 +110,7 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     ripple_renderer_.Finalize();
     return false;
   }
-  if (!meteo_se_.Initialize(1.0f, 0.2f)) {
+  if (!meteo_se_.Initialize(1.0f, 0.05f)) {
     mojgame::LOGGER().Error("Failed to initialize meteo se");
     phantom_voice_se_.Finalize();
     footstep_se_.Finalize();
@@ -124,7 +125,7 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
   pablo_.AttachFootstepSe(footstep_se_);
   mojgame::atb_aux::AddColor3fVarRW(tweak_bar(), "Ripples", "Color Filter",
                                     tweaker_ctx.ripples_rgb_filter, nullptr);
-  alListenerfv(AL_POSITION, glm::value_ptr(glm::vec3()));
+  alListenerfv(AL_POSITION, glm::value_ptr(glm::vec3(0.5f)));
   return true;
 }
 
@@ -146,10 +147,10 @@ void ProductionScene::OnFinal() {
 }
 
 void ProductionScene::PlayPhantomVoice(int phantom) {
-  phantom_voice_se_.ChangePitch(phantoms_[phantom].voice_pitch());
   glm::vec3 playing_pos(phantoms_[phantom].pos().y, 0.0f,
                         phantoms_[phantom].pos().y);
-  mojgame::AlureSePlayer::Play(phantom_voice_se_, playing_pos);
+  float pitch = phantoms_[phantom].voice_pitch();
+  mojgame::AlureSePlayer::Play(phantom_voice_se_, playing_pos, pitch);
 }
 
 void ProductionScene::RandomizeAppearingPositionForPhantom(glm::vec2 &appearing_pos) {
@@ -587,8 +588,14 @@ void ProductionScene::ActuateMeteo(const glm::vec2 &pos) {
   stimulus_.pos = pos + glm::diskRand(0.1f);
   stimulus_.color = kMouseStimulusColor;
   stimulus_.effect = kMouseStimulusEffect;
-  glm::vec3 playing_pos(stimulus_.pos.x, 0.0f, stimulus_.pos.y);
-  mojgame::AlureSePlayer::Play(meteo_se_, playing_pos);
+  if (meteo_se_interval_ == 0) {
+    glm::vec3 playing_pos(stimulus_.pos.x, 0.0f, stimulus_.pos.y);
+    float pitch = glm::linearRand(0.7f, 1.1f);
+    mojgame::AlureSePlayer::Play(meteo_se_, playing_pos, pitch);
+    meteo_se_interval_ = 3;
+  } else {
+    meteo_se_interval_ = --meteo_se_interval_;
+  }
 }
 
 bool ProductionScene::OnReaction(const SDL_MouseButtonEvent &button,
@@ -598,6 +605,7 @@ bool ProductionScene::OnReaction(const SDL_MouseButtonEvent &button,
       glm::vec2 pos = glm::vec2(static_cast<float>(button.x),
                                 static_cast<float>(button.y)) / window_size;
       pos.y = 1.0f - pos.y;
+      meteo_se_interval_ = 0;
       ActuateMeteo(pos);
     }
   }
