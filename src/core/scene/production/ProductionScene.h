@@ -47,7 +47,7 @@ class ProductionScene : public GracefulRainBaseScene {
   static const float kBattleTimeToStartHardBattle;
   static const float kMaxEscapeDistance;
 
-  void PlayPhantomVoice(int phantom);
+  void PlayPhantomVoice(int phantom, float gain);
   void RandomizeAppearingPositionForPhantom(glm::vec2 &appearing_pos);
   void Direct();
   void ActuateMeteo(const glm::vec2 &pos);
