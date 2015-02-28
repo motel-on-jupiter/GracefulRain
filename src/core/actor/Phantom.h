@@ -52,7 +52,7 @@ class Phantom : public GracefulRainActor {
   static const int kLifeMaxOnTough;
 
   void RandomizeVoicePitch() {
-    voice_pitch_ = glm::linearRand(0.9f, 1.2f);
+    voice_pitch_ = glm::linearRand(1.1f, 1.9f);
   }
 
   float voice_pitch_;
