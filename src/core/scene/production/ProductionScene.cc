@@ -28,7 +28,7 @@ const glm::vec2 ProductionScene::kPhantomInitialAppearingPoss[] = {
 const glm::vec3 ProductionScene::kRainStimulusColor(1.0f);
 const glm::vec2 ProductionScene::kRainStimulusEffectRange(0.3f, 0.7f);
 
-const glm::vec3 ProductionScene::kMouseStimulusColor(0.0f, 1.0f, 0.5f);
+const glm::vec3 ProductionScene::kMouseStimulusColor(0.5f, 1.0f, 0.5f);
 const float ProductionScene::kMouseStimulusEffect = 1.0f;
 
 const float ProductionScene::kBattleTime = 120.0f;
