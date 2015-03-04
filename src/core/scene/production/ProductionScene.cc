@@ -100,7 +100,7 @@ bool ProductionScene::OnInitial(const glm::vec2 &window_size) {
     ripple_renderer_.Finalize();
     return false;
   }
-  if (!phantom_voice_se_.Initialize(1.0f, 0.6f)) {
+  if (!phantom_voice_se_.Initialize(1.0f, 0.3f)) {
     mojgame::LOGGER().Error("Failed to initialize phantom voice se");
     footstep_se_.Finalize();
     forest_bgm_.Finalize();
@@ -280,7 +280,7 @@ void ProductionScene::Direct() {
   for (i = 0; i < 2; ++i) {
     phantoms_[i].Appear(kPhantomInitialAppearingPoss[i]);
     phantoms_[i].Walk(rina_);
-    PlayPhantomVoice(i, 1.0f);
+    PlayPhantomVoice(i, 0.2f);
   }
   rina_.Walk(glm::vec2(0.5f, 0.6f));
   while (rina_.IsWalking()) {
@@ -293,7 +293,7 @@ void ProductionScene::Direct() {
   for (i = 2; i < 4; ++i) {
     phantoms_[i].Appear(kPhantomInitialAppearingPoss[i]);
     phantoms_[i].Walk(rina_);
-    PlayPhantomVoice(i, 1.0f);
+    PlayPhantomVoice(i, 0.2f);
   }
   rina_.Walk(glm::vec2(0.5f, 0.5f));
   while (rina_.IsWalking()) {
@@ -334,7 +334,7 @@ void ProductionScene::Direct() {
           phantoms_[i].ReceiveDamage();
           if (phantoms_[i].IsDead()) {
             glm::vec2 appearing_pos;
-            PlayPhantomVoice(i, 0.6f);
+            PlayPhantomVoice(i, 0.15f);
             RandomizeAppearingPositionForPhantom(appearing_pos);
             phantoms_[i].Revive(direction_timer_ >= kBattleTimeToStartHardBattle,
                                 (direction_timer_ >= kBattleTimeToStartSeriousBattle) ?
@@ -376,7 +376,7 @@ void ProductionScene::Direct() {
   }
   for (i = 0; i<ARRAYSIZE(phantoms_); ++i) {
     phantoms_[i].Stop();
-    PlayPhantomVoice(i, 0.6f);
+    PlayPhantomVoice(i, 0.15f);
   }
   direction_timer_ = 0.0f;
   while (direction_timer_ < 3.0f) {
